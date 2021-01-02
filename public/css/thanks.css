@@ -1,0 +1,32 @@
+@import "../Files/bootstrap-rtl.css";
+@font-face {
+    font-family: Num;
+    src: url('../Fonts/adore_otf.otf');
+}
+@font-face {
+    font-family: Arb;
+    src: url('../Fonts/hacen_saudi_arabia_otf.otf');
+}
+
+body, span, button, h2, h3, h4, h5, h6,div,input,a,ul,li {
+    /* letter-spacing: 1px;  */
+    font-family: Arb !important;
+}
+
+@media(min-width:991px){
+    .img-thanks{
+        width: 50%;
+    }
+
+}
+@media(max-width:990px){
+    .img-thanks{
+        width: 100%;
+        margin:auto;
+
+    }
+}
+
+
+
+

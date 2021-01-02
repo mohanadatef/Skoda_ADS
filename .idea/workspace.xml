@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2bb47656-0ef6-490c-abf7-05759677aac7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/app/Exports/ADSExport.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/BackController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Middleware/AdminMiddelware.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Requests/SkodaADSImageRequest.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/get_image.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../estsharion/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../price/Modules/CoreData/Resources/views/answer/answer_index.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../price/resources/views/frontend/home.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../studyingabroad_ui/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/.idea/tameen.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/app/Http/Controllers/HomeController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/app/Http/Requests/TameenCreateRequest.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/app/Test.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap-rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap-rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master/bootstrap4-rtl-v4.1.3-master/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master/bootstrap4-rtl-v4.1.3-master/css/bootstrap-rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master/bootstrap4-rtl-v4.1.3-master/css/bootstrap-rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master/bootstrap4-rtl-v4.1.3-master/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master/bootstrap4-rtl-v4.1.3-master/js/bootstrap.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master/bootstrap4-rtl-v4.1.3-master/js/bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master/bootstrap4-rtl-v4.1.3-master/js/jquery-3.3.1.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/bootstrap4-rtl-v4.1.3-master/bootstrap4-rtl-v4.1.3-master/js/popper.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/jquery.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Files/popper.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Fonts/adore.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Fonts/adore_otf.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Fonts/hacen_saudi_arabia.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Fonts/hacen_saudi_arabia_otf.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Imgs/background.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Imgs/background2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Imgs/background3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Imgs/pc.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Imgs/thanks1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Imgs/thanks2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Imgs/thanks3.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/Imgs/thanks3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/css/style2.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/public/css/style3.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/resources/views/home.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/resources/views/home2.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/resources/views/home3.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/resources/views/mail.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/resources/views/thank1.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tameen/resources/views/thank2.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ApproachPrintingCenter/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ApproachPrintingCenter/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../buytest/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../buytest/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms/.idea/cms.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../cms/.idea/cms.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cms/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms/Modules/CoreData/Http/Requests/admin/Item/ItemCreateRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/../cms/Modules/CoreData/Http/Requests/admin/Item/ItemCreateRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms/storage/framework/cache/data/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.env.example" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.htaccess" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.idea/cms_test.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/.styleci.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Console/Kernel.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Exceptions/Handler.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Controllers/Auth/ForgotPasswordController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Controllers/Auth/LoginController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Controllers/Auth/RegisterController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Controllers/Auth/ResetPasswordController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Controllers/Auth/VerificationController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Controllers/Controller.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Kernel.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Middleware/Authenticate.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Middleware/CheckForMaintenanceMode.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Middleware/EncryptCookies.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Middleware/RedirectIfAuthenticated.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Middleware/TrimStrings.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Middleware/TrustProxies.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Http/Middleware/VerifyCsrfToken.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Providers/AppServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Providers/AuthServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Providers/BroadcastServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Providers/EventServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/Providers/RouteServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/app/User.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/artisan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/bootstrap/app.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/bootstrap/cache/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/composer.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/composer.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/app.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/auth.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/broadcasting.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/cache.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/database.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/filesystems.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/hashing.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/logging.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/mail.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/queue.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/services.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/session.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/config/view.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/database/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/database/factories/UserFactory.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/database/migrations/2014_10_12_100000_create_password_resets_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/database/seeds/DatabaseSeeder.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/phpunit.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/public/css/app.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/public/js/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/js/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/js/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/js/components/ExampleComponent.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/lang/en/auth.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/lang/en/pagination.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/lang/en/passwords.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/lang/en/validation.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/sass/_variables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/sass/app.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/resources/views/welcome.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/routes/api.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/routes/channels.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/routes/console.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/routes/web.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/server.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/app/public/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/framework/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/framework/cache/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/framework/cache/data/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/framework/sessions/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/framework/testing/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/framework/views/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/storage/logs/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/tests/CreatesApplication.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/tests/Feature/ExampleTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/tests/TestCase.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/tests/Unit/ExampleTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/web.config" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cms_test/webpack.mix.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/.idea/Estsharion.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/Auth/LoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/Auth/LoginController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/Auth/VerificationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/Auth/VerificationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/AboutUsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/AboutUsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/CityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/CityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ClientController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ContactUsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ContactUsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/EmailController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/EmailController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/HomeSliderController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/HomeSliderController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/JobController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/JobController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/MedicalPlaceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/MedicalPlaceController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/MedicalProgramController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/MedicalProgramController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/MedicalTypeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/MedicalTypeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/NeweController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/NeweController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/OpinionClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/OpinionClientController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/QuestionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/QuestionController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/RoleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/RoleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ScientificDegreeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ScientificDegreeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ServiceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ServiceController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ServiceTypeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/ServiceTypeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/SettingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/SettingController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/SpecialtyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/SpecialtyController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/TempletMedicalMapController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/TempletMedicalMapController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/TownController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/TownController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Controllers/admin/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Middleware/AdminMiddelware.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Middleware/AdminMiddelware.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Middleware/Authenticate.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Middleware/Authenticate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/app/Http/Middleware/RedirectIfAuthenticated.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/app/Http/Middleware/RedirectIfAuthenticated.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/config/app.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/estsharion.sql.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/estsharion.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/about_us/about_us_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/about_us/about_us_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/about_us/about_us_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/about_us/about_us_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/about_us/about_us_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/about_us/about_us_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/call_us/call_us_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/call_us/call_us_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/city/city_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/city/city_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/city/city_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/city/city_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/city/city_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/city/city_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/client/client_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/client/client_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/client/client_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/client/client_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/client/client_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/client/client_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/contact_us/contact_us_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/contact_us/contact_us_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/contact_us/contact_us_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/contact_us/contact_us_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/contact_us/contact_us_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/contact_us/contact_us_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/email/email_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/email/email_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/email/email_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/email/email_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/email/email_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/email/email_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/home_slider/home_slider_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/home_slider/home_slider_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/home_slider/home_slider_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/home_slider/home_slider_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/home_slider/home_slider_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/home_slider/home_slider_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/import/error.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/import/error.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/import/import.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/import/import.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/import/import_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/import/import_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/import/save.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/import/save.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/job/job_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/job/job_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/job/job_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/job/job_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/job/job_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/job/job_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/job_request/job_request_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/job_request/job_request_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_place/medical_place_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_place/medical_place_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_place/medical_place_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_place/medical_place_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_place/medical_place_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_place/medical_place_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_program/medical_program_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_program/medical_program_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_program/medical_program_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_program/medical_program_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_program/medical_program_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_program/medical_program_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_type/medical_type_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_type/medical_type_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_type/medical_type_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_type/medical_type_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_type/medical_type_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/medical_type/medical_type_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/newe/newe_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/newe/newe_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/newe/newe_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/newe/newe_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/newe/newe_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/newe/newe_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/opinion_client/opinion_client_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/opinion_client/opinion_client_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/opinion_client/opinion_client_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/opinion_client/opinion_client_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/opinion_client/opinion_client_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/opinion_client/opinion_client_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/question/question_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/question/question_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/question/question_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/question/question_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/question/question_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/question/question_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/role/role_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/role/role_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/role/role_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/role/role_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/role/role_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/role/role_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/sales_order/sales_order_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/sales_order/sales_order_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/scientific_degree/scientific_degree_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/scientific_degree/scientific_degree_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/scientific_degree/scientific_degree_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/scientific_degree/scientific_degree_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/scientific_degree/scientific_degree_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/scientific_degree/scientific_degree_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/service/service_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/service/service_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/service/service_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/service/service_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/service/service_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/service/service_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/service_type/service_type_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/service_type/service_type_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/service_type/service_type_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/service_type/service_type_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/service_type/service_type_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/service_type/service_type_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/setting/setting_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/setting/setting_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/setting/setting_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/setting/setting_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/setting/setting_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/setting/setting_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/specialty/specialty_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/specialty/specialty_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/specialty/specialty_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/specialty/specialty_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/specialty/specialty_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/specialty/specialty_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/town/town_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/town/town_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/town/town_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/town/town_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/town/town_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/town/town_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/user/user_create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/user/user_create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/user/user_edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/user/user_edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/user/user_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/user/user_index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/admin/user/user_reset_password.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/admin/user/user_reset_password.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/auth/login.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/frontend/medical_map.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/frontend/medical_map.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/includes/admin/contect.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/includes/admin/contect.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/includes/admin/main-header.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/includes/admin/main-header.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/resources/views/includes/admin/main-sidebar.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/resources/views/includes/admin/main-sidebar.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/../estsharion/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../estsharion/storage/framework/cache/data/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mohanad_test/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mohanad_test/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mohanad_test/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mohanad_test/.idea/mohanad_test.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mohanad_test/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mohanad_test/app/Http/Controllers/UserController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mohanad_test/app/User_Detail.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mohanad_test/resources/views/user.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../studyingabroad_ui/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../studyingabroad_ui/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../studyingabroad_ui/assets/CSS/en/header-en.css" beforeDir="false" afterPath="$PROJECT_DIR$/../studyingabroad_ui/assets/CSS/en/header-en.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../studyingabroad_ui/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/../studyingabroad_ui/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test_company/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test_company/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test_company/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test_company/.idea/test_company.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test_company/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../travel/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../travel/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../travel/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../travel/.idea/travel.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../travel/.idea/workspace.xml" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/views/get_image.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="595">
+              <caret line="58" column="69" selection-start-line="58" selection-start-column="69" selection-end-line="58" selection-end-column="69" />
+              <folding>
+                <element signature="e#0#2632#0#Blade" />
+                <element signature="e#0#2632#0#Blade" />
+                <element signature="e#1475#2212#0#HTML" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="18" column="29" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="29" />
+              <folding>
+                <element signature="e#7#392#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Requests/SkodaADSImageRequest.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="297">
+              <caret line="21" column="20" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/BackController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="399">
+              <caret line="36" column="31" selection-start-line="36" selection-start-column="31" selection-end-line="36" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>555555</find>
+      <find>585858</find>
+      <find>main</find>
+      <find>question3</find>
+      <find>pric</find>
+      <find>child(</find>
+      <find>nth-child(even)</find>
+      <find>even</find>
+      <find>domain</find>
+      <find>body</find>
+      <find>contacts</find>
+      <find>price</find>
+      <find>dropdown</find>
+      <find>18px</find>
+      <find>.dropdown-menu</find>
+      <find>submenu1</find>
+      <find>ques</find>
+      <find>classic</find>
+      <find>background</find>
+      <find>button</find>
+      <find>su</find>
+      <find>font</find>
+      <find>font-size</find>
+      <find>form-input</find>
+      <find>form-content form</find>
+      <find>place</find>
+      <find>form</find>
+      <find>select</find>
+      <find>formtitle</find>
+      <find>skoda</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>6f6f6f</replace>
+      <replace>white</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/config/jsvalidation.php" />
+        <option value="$PROJECT_DIR$/app/Mail/SendMailJob.php" />
+        <option value="$PROJECT_DIR$/../cms/Modules/CoreData/Http/Requests/admin/Item/ItemCreateRequest.php" />
+        <option value="F:/Ta2meen page/index3.html" />
+        <option value="F:/Ta2meen page/index2.html" />
+        <option value="F:/Ta2meen page/index.html" />
+        <option value="$PROJECT_DIR$/resources/views/vendor/jsvalidation/bootstrap.php" />
+        <option value="$PROJECT_DIR$/config/mail.php" />
+        <option value="$PROJECT_DIR$/app/Test.php" />
+        <option value="$PROJECT_DIR$/public/css/style2.css" />
+        <option value="$PROJECT_DIR$/public/css/style3.css" />
+        <option value="$PROJECT_DIR$/../estsharion/resources/views/frontend/medical_map.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/home3.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/home2.blade.php" />
+        <option value="$PROJECT_DIR$/../ApproachPrintingCenter/resources/views/admin/role/role_create.blade.php" />
+        <option value="$PROJECT_DIR$/../worx/composer.json" />
+        <option value="$PROJECT_DIR$/../fekerty_website_dashboard/fekrety_website/resources/views/price_social_media.blade.php" />
+        <option value="$PROJECT_DIR$/../fekerty_website_dashboard/fekrety_website/resources/views/price_web_development.blade.php" />
+        <option value="$PROJECT_DIR$/../fekerty_website_dashboard/fekrety_website/public/assets/newdesign/css/style_price.css" />
+        <option value="$PROJECT_DIR$/../fekerty_website_dashboard/fekrety_website/public/assets/newdesign/css/style2_price.css" />
+        <option value="$PROJECT_DIR$/../worx/resources/views/cannse_lions_egypt_academy.blade.php" />
+        <option value="$PROJECT_DIR$/../worx/resources/views/cannes_lions_egypt_academy.blade.php" />
+        <option value="$PROJECT_DIR$/../worx/app/Http/Controllers/HomeController.php" />
+        <option value="$PROJECT_DIR$/../worx/app/Http/routes.php" />
+        <option value="$PROJECT_DIR$/../worx/resources/views/YL_2020_FINAL_Bro_V1.blade.php" />
+        <option value="E:/code/studyingabroad_ui/assets/CSS/en/header-en.css" />
+        <option value="$PROJECT_DIR$/../worx/resources/views/main.blade.php" />
+        <option value="$PROJECT_DIR$/app/Http/Requests/TameenCreateRequest.php" />
+        <option value="$PROJECT_DIR$/resources/views/thank2.blade.php" />
+        <option value="$PROJECT_DIR$/app/Http/Requests/SkodaADSCreateRequest.php" />
+        <option value="$PROJECT_DIR$/.env" />
+        <option value="$PROJECT_DIR$/app/ADS.php" />
+        <option value="$PROJECT_DIR$/config/app.php" />
+        <option value="$PROJECT_DIR$/composer.json" />
+        <option value="$PROJECT_DIR$/app/Exports/ADSExport.php" />
+        <option value="$PROJECT_DIR$/app/Request_Ads.php" />
+        <option value="$PROJECT_DIR$/public/css/style.css" />
+        <option value="$PROJECT_DIR$/resources/views/thank.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/thank1.blade.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" />
+        <option value="$PROJECT_DIR$/app/Http/Middleware/AdminMiddelware.php" />
+        <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
+        <option value="$PROJECT_DIR$/app/Http/routes.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/Auth/AuthController.php" />
+        <option value="$PROJECT_DIR$/app/Http/Requests/SkodaADSImageRequest.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/BackController.php" />
+        <option value="$PROJECT_DIR$/resources/views/home.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/auth/login.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/layouts/app.blade.php" />
+        <option value="$PROJECT_DIR$/app/User.php" />
+        <option value="$PROJECT_DIR$/resources/views/get_image.blade.php" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/kylekatarnls/update-helper" />
+      <path value="$PROJECT_DIR$/vendor/classpreloader/classpreloader" />
+      <path value="$PROJECT_DIR$/vendor/jakub-onderka/php-console-color" />
+      <path value="$PROJECT_DIR$/vendor/jeremeamia/superclosure" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-util" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php56" />
+      <path value="$PROJECT_DIR$/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/symfony/debug" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/swiftmailer/swiftmailer" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/dnoegel/php-xdg-base-dir" />
+      <path value="$PROJECT_DIR$/vendor/psy/psysh" />
+      <path value="$PROJECT_DIR$/vendor/jakub-onderka/php-console-highlighter" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/vendor/laravelcollective/html" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/vendor/proengsoft/laravel-jsvalidation" />
+      <path value="$PROJECT_DIR$/vendor/fzaninotto/faker" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/mtdowling/cron-expression" />
+      <path value="$PROJECT_DIR$/vendor/hamcrest/hamcrest-php" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/vendor/phpspec/prophecy" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/vendor/mockery/mockery" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit-mock-objects" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-token-stream" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/vendor/laravel/framework" />
+      <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
+      <path value="$PROJECT_DIR$/vendor/league/flysystem" />
+      <path value="$PROJECT_DIR$/vendor/phpoffice/phpexcel" />
+      <path value="$PROJECT_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
+      <path value="$PROJECT_DIR$/vendor/maatwebsite/excel" />
+    </include_path>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-7" />
+    <option name="width" value="1370" />
+    <option name="height" value="735" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="Http" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="Http" type="462c0819:PsiDirectoryNode" />
+              <item name="Controllers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="Imgs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Skoda_ADS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Skoda_ADS" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="layouts" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../estsharion" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\Skoda_ADS\app\Http\Middleware" />
+      <recent name="C:\xampp\htdocs\Skoda_ADS\resources\views" />
+      <recent name="C:\xampp\htdocs\Skoda_ADS\app\Http\Requests" />
+      <recent name="C:\xampp\htdocs\Skoda_ADS\app\Http\Controllers" />
+      <recent name="C:\xampp\htdocs\Skoda_ADS\app" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner scope="XML" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2bb47656-0ef6-490c-abf7-05759677aac7" name="Default Changelist" comment="" />
+      <created>1575981828880</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1575981828880</updated>
+      <workItem from="1575981833022" duration="12000" />
+      <workItem from="1576139160775" duration="24406000" />
+      <workItem from="1576669965560" duration="4468000" />
+      <workItem from="1576748591371" duration="4442000" />
+      <workItem from="1576759033564" duration="484000" />
+      <workItem from="1576854648804" duration="999000" />
+      <workItem from="1577001142531" duration="10252000" />
+      <workItem from="1577090729802" duration="2482000" />
+      <workItem from="1577112204609" duration="1355000" />
+      <workItem from="1577175800764" duration="16134000" />
+      <workItem from="1578412260782" duration="355000" />
+      <workItem from="1579611877415" duration="228000" />
+      <workItem from="1579681258731" duration="730000" />
+      <workItem from="1580907600519" duration="26246000" />
+      <workItem from="1580997183006" duration="4878000" />
+      <workItem from="1581593344491" duration="373000" />
+      <workItem from="1582113532002" duration="31000" />
+      <workItem from="1582113625100" duration="4181000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="102056000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24810892" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Gulp" order="2" side_tool="true" />
+      <window_info id="npm" order="3" side_tool="true" />
+      <window_info id="Favorites" order="4" side_tool="true" />
+      <window_info id="Storybook" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.3289689" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50075644" side_tool="true" weight="0.3289689" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49924356" weight="0.95090014" />
+      <window_info anchor="bottom" id="RNConsole" order="12" />
+      <window_info anchor="bottom" id="TG" order="13" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" weight="0.32980332" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/storage/framework/sessions/03e4c51570858cbd1f968e2b568cc2e09ce6a2c8" />
+    <entry file="file://$PROJECT_DIR$/../worx/composer.json" />
+    <entry file="file://$PROJECT_DIR$/../worx/.env.example" />
+    <entry file="file://$PROJECT_DIR$/../worx/.env" />
+    <entry file="file://$PROJECT_DIR$/../worx/config/app.php" />
+    <entry file="file://$PROJECT_DIR$/../fekerty_website_dashboard/fekrety_website/resources/views/price_web_development.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="178" column="30" selection-start-line="178" selection-start-column="30" selection-end-line="178" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../fekerty_website_dashboard/fekrety_website/resources/views/price_social_media.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="164" column="34" selection-start-line="164" selection-start-column="25" selection-end-line="164" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../fekerty_website_dashboard/fekrety_website/public/assets/newdesign/css/style_price.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="94" column="16" selection-start-line="94" selection-start-column="16" selection-end-line="94" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../fekerty_website_dashboard/fekrety_website/public/assets/newdesign/css/style2_price.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="397" column="19" selection-start-line="397" selection-start-column="19" selection-end-line="397" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../worx/config/database.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/resources/views/slider.blade.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/resources/views/services.blade.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/resources/views/home.blade.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/app/Http/Controllers/WorkController.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/resources/views/about.blade.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/app/Http/routes.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/resources/views/YL_2020_FINAL_Bro_V1.blade.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/app/Http/Controllers/HomeController.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/resources/views/event/index.blade.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/resources/views/main.blade.php" />
+    <entry file="file://$PROJECT_DIR$/../worx/resources/views/cannes_lions_egypt_academy.blade.php" />
+    <entry file="file://E:/code/studyingabroad_ui/assets/CSS/en/header-en.css" />
+    <entry file="file://E:/code/studyingabroad_ui/home.html" />
+    <entry file="file://$PROJECT_DIR$/resources/views/thank2.blade.php" />
+    <entry file="file://$PROJECT_DIR$/app/Http/Requests/SkodaADSCreateRequest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="22" column="7" lean-forward="true" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/excel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-11507" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/app.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-508">
+          <caret line="157" column="49" lean-forward="true" selection-start-line="157" selection-start-column="49" selection-end-line="157" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Exports/ADSExport.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="28" selection-start-line="17" selection-start-column="16" selection-end-line="18" selection-end-column="28" />
+          <folding>
+            <element signature="e#30#50#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="30" lean-forward="true" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/thanks.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tameen.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="37" column="26" lean-forward="true" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/thank.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="7" selection-end-line="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/thank1.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="21" column="42" selection-end-line="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Controller.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="51" column="63" selection-start-line="51" selection-start-column="63" selection-end-line="51" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Request_Ads.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" selection-start-line="16" selection-end-line="16" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/HomeController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="366">
+          <caret line="28" column="56" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="56" />
+          <folding>
+            <element signature="e#40#66#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Middleware/Authenticate.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="22" column="20" lean-forward="true" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Middleware/AdminMiddelware.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="24" column="35" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Auth/PasswordController.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/BackController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="36" column="31" selection-start-line="36" selection-start-column="31" selection-end-line="36" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="14" column="5" lean-forward="true" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Requests/SkodaADSImageRequest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="21" column="20" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="6" lean-forward="true" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="111">
+          <caret line="41" selection-start-line="41" selection-end-line="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/auth/login.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="28" column="30" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Auth/AuthController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="529">
+          <caret line="70" column="5" lean-forward="true" selection-start-line="63" selection-start-column="4" selection-end-line="70" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="106" column="66" selection-start-line="106" selection-start-column="66" selection-end-line="106" selection-end-column="66" />
+          <folding>
+            <element signature="n#style#0;n#iframe#0;n#noscript#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="29" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="29" />
+          <folding>
+            <element signature="e#7#392#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/get_image.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="58" column="69" selection-start-line="58" selection-start-column="69" selection-end-line="58" selection-end-column="69" />
+          <folding>
+            <element signature="e#0#2632#0#Blade" />
+            <element signature="e#0#2632#0#Blade" />
+            <element signature="e#1475#2212#0#HTML" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

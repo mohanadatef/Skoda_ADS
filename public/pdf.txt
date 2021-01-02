@@ -1,0 +1,5305 @@
+<?php 
+
+namespace App\Modules\Policy\Traits;
+
+
+
+use App\Modules\Policy\Endorsement;
+
+use PDF;
+
+use TCPDF;
+
+use Carbon\Carbon;
+
+
+
+trait EndorsementTrait{
+
+
+
+	public function getAllEndorsements()
+
+	{
+
+		return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype', 'policies'])->get();
+
+	}
+
+	public function SearchForEndorsementsRange($range_start,$range_end)
+	{
+		$endorsements =Endorsement::where('endorsement_no', '>=', $range_start)->where('endorsement_no','<=',$range_end)->get();
+		$data['policies'] = $endorsements;
+		$data['count']= count($data['policies']);
+		$data['net']= $endorsements->sum('net_premium');
+		$data['total']= $endorsements->sum('total');
+		$data['range_start']= $range_start;
+		$data['range_end']= $range_end;
+		return $data;
+	}
+
+
+	public function getAllEndorsementsPaginate()
+
+	{
+
+		return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype', 'policies'])->paginate('10');
+
+	}
+
+	public function getEndorsement($id)
+
+	{
+
+		return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype'])->find($id);
+
+	}
+
+
+
+	public function createEndorsement($data)
+
+	{
+
+		return Endorsement::create($data);
+
+	}
+
+
+
+	public function updateEndorsement($id, $data)
+
+	{
+
+		$endorsement = $this->getEndorsement($id);
+
+		return $endorsement->update($data);
+
+	}
+
+
+
+	public function deleteEndorsement($id)
+
+	{	
+
+		$endorsement = $this->getEndorsement($id);
+
+		return $endorsement->delete();
+
+	}
+
+	
+
+	public function checkEndorsementNo($endorsement_no, $company_id)
+
+	{	
+
+		$policy_no_q = Endorsement::where('endorsement_no', '=', $endorsement_no)
+
+						->where('company_id', '=', $company_id)
+
+						->first();
+
+		if ($policy_no_q) 
+
+		{
+
+			return true;	
+
+		}
+
+		else
+
+		{
+
+			return false;
+
+		}
+
+	}	
+
+	public function checkEndorsementNo2($policy_id, $company_id)
+
+	{	
+
+		// $policy=$this->getPolicyId($policy_id,$company_id);
+
+		// $policy_no_q = Endorsement::where('policy_id', '=', $policy->id)
+
+		// ->where('company_id', '=', $company_id)
+
+		// ->first();
+
+		// if ($policy_no_q) 
+
+		// {
+
+		// 	return true;	
+
+		// }
+
+		// else
+
+		// {
+
+		// 	return false;
+
+		// }
+
+		$policy=$this->getPolicyId($policy_id,$company_id);
+
+		//get all endrosement numbers array
+
+		$policy_no_q = Endorsement::where('policy_id', '=', $policy->id)
+
+		->where('company_id', '=', $company_id)
+
+		->get();
+
+
+
+		if($policy_no_q)
+
+		{
+
+			//convert all endorsement_no numbers 
+
+			$ids=array();
+
+			foreach ($policy_no_q as $policy_no) 
+
+			{
+
+				array_push($ids,-1*$policy_no->endorsement_no);
+
+			}
+
+			//get all refunded endrosements array
+
+			$policy_no_q2 = Endorsement::whereIn('policy_id', $ids)
+
+			->where('endorsement_no', '=', -1)
+
+			->get();	
+
+
+
+			if($policy_no_q2)
+
+			{
+
+					//get all endrosement which not have a refunded (still work)
+
+				$ids2=array();
+
+				foreach ($policy_no_q2 as $policy_no) {
+
+					array_push($ids2,$policy_no->policy_id);
+
+				}
+
+				$result=array_diff($ids,$ids2);
+
+
+
+			}
+
+			else
+
+			{
+
+				$result=$ids;
+
+			}
+
+			if($result)
+
+			{
+
+				//get last endro  to treat with it
+
+				$final_array=array();
+
+				foreach ($result as $key) 
+
+				{
+
+					$key=  $key * -1	;
+
+					array_push($final_array,$key);
+
+				}
+
+					$policy_no_q = Endorsement::where('policy_id', '=', $policy->id)
+
+					->where('company_id', '=', $company_id)
+
+					->whereIn('endorsement_no', $final_array)
+
+				    ->orderBy('created_at', 'aesc')
+
+					->first();
+
+
+
+				return $policy_no_q;	
+
+			}
+
+			else
+
+			{
+
+				//ezn enrosements == refunded; 
+
+				return false;
+
+			}	
+
+		}
+
+		else
+
+		{
+
+			return false;
+
+		}
+
+	}
+
+
+
+	public function getlastendresment($policy_no,$company_id)
+
+	{	
+
+		$policy_id = $this->getPolicyId($policy_no,$company_id);
+
+		$result = Endorsement::where('policy_id',  '=' ,$policy_id->id)
+
+		                     ->where('company_id', '=' ,$company_id)
+
+		                     ->orderBy('created_at', 'aesc')
+
+		                     ->first();
+
+		return $result;
+
+	}
+
+	public function getPolicyEndorsements($policy_no, $company_id)
+
+	{	
+
+		$policy = $this->getPolicyId($policy_no,$company_id);
+
+		// dd($policy);
+
+		if ($policy != "false") 
+
+		{
+
+			$endorsements = Endorsement::where('policy_id', '=', $policy->id)
+
+			->where('company_id', '=', $company_id)
+
+			->orderBy('created_at', 'asc')
+
+			->get();
+
+			if ($endorsements) 
+
+			{
+
+				return $endorsements;	
+
+			}
+
+			else
+
+			{
+
+				return "false";
+
+			}
+
+		}
+
+		else
+
+		{
+
+			return "false";
+
+		}
+
+		
+
+	}
+
+	public function getPolicyEndorsementsById($policy_id, $company_id)
+
+	{	
+
+			$endorsements = Endorsement::where('policy_id', '=', $policy_id)
+
+			->where('company_id', '=', $company_id)
+
+			->orderBy('created_at', 'asc')
+
+			->get();
+
+			if ($endorsements) 
+
+			{
+
+				return $endorsements;	
+
+			}
+
+			else
+
+			{
+
+				return "false";
+
+			}
+
+	}
+
+	public function unClipboardEndorsements($user_id, $office_id)
+
+	{	
+
+		$endorsements = Endorsement::where('user_id', '=', $user_id)
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsement_no', '>', 0)
+
+						->where('is_clipboard', '=', 0)
+
+						->get();
+
+		if ($endorsements) 
+
+		{
+
+			return $endorsements;	
+
+		}
+
+		else
+
+		{
+
+			return "false";
+
+		}
+
+	}
+
+
+
+	public function unClipboardEndorsementsFromPrevious($user_id, $office_id)
+
+	{	
+
+		$today = Carbon::today();
+
+		// dd($today);
+
+		$policy_no_q = Endorsement::where('user_id', '=', $user_id)
+
+						->where('endorsement_no', '>', 0)
+
+						->where('office_id', '=', $office_id)
+
+						->where('is_clipboard', '=', 0)
+
+						->whereDate('created_at', '<', date($today))
+
+						->get();
+
+		if ($policy_no_q) 
+
+		{
+
+			return $policy_no_q;	
+
+		}
+
+		else
+
+		{
+
+			return "false";
+
+		}
+
+	}
+
+
+
+	public function unClipboardRefunds($user_id, $office_id)
+
+	{	
+
+		$endorsements = Endorsement::where('user_id', '=', $user_id)
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsement_no', '<', 0)
+
+						->where('is_clipboard', '=', 0)
+
+						->get();
+
+		if ($endorsements) 
+
+		{
+
+			return $endorsements;	
+
+		}
+
+		else
+
+		{
+
+			return "false";
+
+		}
+
+	}
+
+
+
+	public function unClipboardRefundsFromPrevious($user_id, $office_id)
+
+	{	
+
+		$today = Carbon::today();
+
+		// dd($today);
+
+		$policy_no_q = Endorsement::where('user_id', '=', $user_id)
+
+						->where('endorsement_no', '<', 0)
+
+						->where('office_id', '=', $office_id)
+
+						->where('is_clipboard', '=', 0)
+
+						->whereDate('created_at', '<', date($today))
+
+						->get();
+
+		if ($policy_no_q) 
+
+		{
+
+			return $policy_no_q;	
+
+		}
+
+		else
+
+		{
+
+			return "false";
+
+		}
+
+	}
+
+
+
+	public function unTransferredEndorsements($start_date, $end_date)
+
+	{	
+
+		$endorsements = Endorsement::whereDate('endorsement_date', '>=', date($start_date))
+
+						->whereDate('endorsement_date', '<=', date($end_date))
+
+						->where('is_transferred', '=', 0)
+
+						->get();
+
+		if ($endorsements) 
+
+		{
+
+			return $endorsements;	
+
+		}
+
+		else
+
+		{
+
+			return "false";
+
+		}
+
+	}
+
+
+
+	public function changeTransferredStatusEndorsement($id)
+
+	{	
+
+		Endorsement::where('id', '=', $id)->update(['is_transferred' => 1]);
+
+	}
+
+	
+
+	public function changeClipboardStatusEndorsement($id, $clipboard_id)
+
+	{	
+
+		Endorsement::where('id', '=', $id)->update(['is_clipboard' => 1, 'clipboard_id' => $clipboard_id]);
+
+	}
+
+	
+
+	public function clipboardEndorsementsMoney($user_id, $office_id)
+
+	{	
+
+		$net = Endorsement::where('user_id', '=', $user_id)->where('office_id', '=', $office_id)->where('is_clipboard', '=', 0)->sum('net_premium');
+
+		$total = Endorsement::where('user_id', '=', $user_id)->where('office_id', '=', $office_id)->where('is_clipboard', '=', 0)->sum('total');
+
+
+
+		return compact('net', 'total');
+
+	}
+
+
+
+	public function checkEndorsementRefunded($policy_id, $company_id)
+
+	{	
+
+		$policy_no_q = Endorsement::where('endorsement_no', '=', -1)
+
+						->where('policy_id', '=', $policy_id)
+
+						->where('company_id', '=', $company_id)
+
+						->first();
+
+		if ($policy_no_q) 
+
+		{
+
+			return true;	
+
+		}
+
+		else
+
+		{
+
+			return false;
+
+		}
+
+	}
+
+
+
+	public function getRefundedEndorsement($endorsement_no, $company_id)
+
+	{	
+
+		$endorsement = Endorsement::where('endorsement_no', '=', -1)
+
+						->where('policy_id', '=', $endorsement_no*-1)
+
+						->where('company_id', '=', $company_id)
+
+						->first();
+
+		if ($endorsement) 
+
+		{
+
+			return true;	
+
+		}
+
+		else
+
+		{
+
+			return false;
+
+		}
+
+	}
+
+
+
+	public function getRefundStat($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsement_no', '=', -1)
+
+						->get();
+
+	}
+
+
+
+	public function getTodayEndorsementStat($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 4)
+
+						->get();
+
+	}
+
+	public function getReplacementEndorsementStat($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 3)
+
+						->get();
+
+	}
+
+		public function getEndorsementeditclient($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 5)
+
+						->get();
+
+	}
+
+	public function getEndorsementeditmotor($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 6)
+
+						->get();
+
+	}
+
+	public function getEndorsementeditplate($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 7)
+
+						->get();
+
+	}
+
+	public function getEndorsementeditchassi($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 8)
+
+						->get();
+
+	}
+
+	public function getEndorsementeditemergencelengths($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 9)
+
+						->get();
+
+	}
+
+	public function getEndorsementeditcc($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 10)
+
+						->get();
+
+	}
+
+	public function getEndorsementeditweight($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 11)
+
+						->get();
+
+	}
+
+	public function getEndorsementeditpassengers($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 12)
+
+						->get();
+
+	}
+
+	public function getEndorsementAddPeriod($office_id)
+
+	{
+
+		return Endorsement::whereDate('created_at', '=', Carbon::today()->toDateString())
+
+						->where('office_id', '=', $office_id)
+
+						->where('endorsment_type_id', '=', 13)
+
+						->get();
+
+	}
+
+	public function getSearchExcelResultEndoresment($company, $office, $policy_start_date, $policy_end_date)
+
+	{
+
+
+
+		$selected_columns = array('policy_id','endorsement_no', 'endorsement_date', 'policy_start_date', 'policy_end_date', 'client_name', 'client_address','client_telephone', 'plate_no', 'national_id', 'model_id', 'manufacture_year', 'nationality_id', 'chassis_no', 'motor_no', 'passengers_id', 'licence_type_id', 'car_cc', 'car_weight', 'endorsment_type_id', 'company_id', 'office_id', 'transport_passengers', 'net_premium', 'relative_stamp', 'issuance_fees', 'supervisory_fees', 'breadth_stamp', 'total', 'is_company');
+
+
+
+		if ($office == "0") 
+
+		{
+
+			return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype'])->where('company_id', '=', $company)->
+
+			whereDate('endorsement_date', '>=', date($policy_start_date))->
+
+			whereDate('endorsement_date', '<=', date($policy_end_date))
+
+			->select($selected_columns)->get();
+
+		}
+
+		
+
+		else
+
+
+
+		{
+
+			return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype'])->where('company_id', '=', $company)->
+
+			where('office_id', '=', $office)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		
+
+	}
+
+	public function getSearchEndorsementFilterOffices($company, $office, $policy_start_date, $policy_end_date)
+
+	{
+
+
+
+		$selected_columns = array('policy_id','endorsement_no', 'endorsement_date', 'policy_start_date', 'policy_end_date', 'client_name', 'client_address','client_telephone', 'plate_no', 'national_id', 'model_id', 'manufacture_year', 'nationality_id', 'chassis_no', 'motor_no', 'passengers_id', 'licence_type_id', 'car_cc', 'car_weight', 'endorsment_type_id', 'company_id', 'office_id', 'transport_passengers', 'net_premium', 'relative_stamp', 'issuance_fees', 'supervisory_fees', 'breadth_stamp', 'total', 'is_company');
+
+
+
+		if ($office == "0") 
+
+		{
+
+			return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype'])->where('company_id', '=', $company)->
+
+			whereDate('endorsement_date', '>=', date($policy_start_date))->
+
+			whereDate('endorsement_date', '<=', date($policy_end_date))
+
+			->select($selected_columns)->get();
+
+		}
+
+		else
+
+		{
+
+			return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype'])->where('company_id', '=', $company)->
+
+			whereIn('office_id', $office)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		
+
+	}
+
+	
+
+	public function getSearchExcelResultEndoresmentno2($company, $office, $policy_start_date, $policy_end_date)
+
+	{
+
+		$selected_columns = array('policy_id','endorsement_no', 'endorsement_date', 'policy_start_date', 'policy_end_date', 'client_name', 'client_address','client_telephone', 'plate_no', 'national_id', 'model_id', 'manufacture_year', 'nationality_id', 'chassis_no', 'motor_no', 'passengers_id', 'licence_type_id', 'car_cc', 'car_weight', 'endorsment_type_id', 'company_id', 'office_id', 'transport_passengers', 'net_premium', 'relative_stamp', 'issuance_fees', 'supervisory_fees', 'breadth_stamp', 'total', 'is_company');
+
+
+
+		// $selected_columns = array('policy_id','endorsement_no', 'endorsement_date', 'policy_start_date', 'policy_end_date', 'client_name', 'client_address','client_telephone', 'plate_no', 'national_id', 'manufacture_year',  'chassis_no', 'motor_no', 'car_cc', 'car_weight', 'transport_passengers', 'net_premium', 'relative_stamp', 'issuance_fees', 'supervisory_fees', 'breadth_stamp', 'total', 'is_company');
+
+		
+
+		if ($office == "0") 
+
+		{
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereDate('endorsement_date', '>=', date($policy_start_date))->
+
+			whereDate('endorsement_date', '<=', date($policy_end_date))
+
+			->select($selected_columns)->get();
+
+		}
+
+		else
+
+		{
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('office_id', $office)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+	}
+
+
+
+	public function getMonthlyReportExcelEndorsements($company, $office, $policy_start_date, $policy_end_date)
+
+	{
+
+		$selected_columns = array('policy_id','endorsement_no', 'policy_start_date', 'policy_end_date', 'client_name', 'model_id', 'licence_type_id', 'passengers_id',  'car_cc', 'car_weight', 'endorsment_type_id', 'company_id', 'transport_passengers', 'chassis_no', 'motor_no', 'net_premium', 'breadth_stamp','relative_stamp',  'supervisory_fees', 'issuance_fees', 'total', 'office_id', 'is_company', 'endorsement_date');
+
+		return Endorsement::where('company_id', '=', $company)->
+
+		                    whereDate('endorsement_date', '>=', date($policy_start_date))->
+
+			                whereDate('endorsement_date', '<=', date($policy_end_date))
+
+			                ->select($selected_columns)->get();
+
+	}
+
+
+
+	public function getSearchPoliciecCompanyFilter($company, $office, $policy_start_date, $policy_end_date)
+
+	{
+
+		if ($office == "0") 
+
+		{
+
+			return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype'])->where('company_id', '=', $company)->
+
+			whereDate('endorsement_date', '>=', date($policy_start_date))->
+
+			whereDate('endorsement_date', '<=', date($policy_end_date))
+
+			->get();
+
+		}
+
+		
+
+		else
+
+		{
+
+			return Endorsement::with(['cmodel', 'endorsment', 'passenger', 'company', 'office', 'nationality', 'licencetype'])->where('company_id', '=', $company)->
+
+			where('office_id', '=', $office)->
+
+			whereDate('endorsement_date','<=', date($policy_end_date))->
+
+			whereDate('endorsement_date','>=', date($policy_start_date))->get();
+
+		}			
+
+	}
+
+
+
+	public function getSearchOfficesCompaniesEndoresmentExcelResult($company, $office, $policy_start_date, $policy_end_date)
+
+	{
+
+		$select_coulms = array('policy_id','endorsement_no', 'client_name','client_telephone','nationality_id', 'model_id','policy_start_date', 'policy_end_date','office_id','endorsment_type_id');
+
+
+
+		if ($office == "0") 
+
+		{
+
+			return Endorsement::with(['cmodel', 'endorsment',  'office', 'nationality'])->where('company_id', '=', $company)->
+
+			whereDate('endorsement_date', '>=', date($policy_start_date))->
+
+			whereDate('endorsement_date', '<=', date($policy_end_date))
+
+			->select($select_coulms)->get();
+
+		}
+
+		
+
+		else
+
+		{
+
+			return Endorsement::with(['cmodel', 'endorsment',  'office', 'nationality'])->where('company_id', '=', $company)->
+
+			where('office_id', '=', $office)->
+
+			whereDate('endorsement_date','<=', date($policy_end_date))->
+
+			whereDate('endorsement_date','>=', date($policy_start_date))->select($select_coulms)->get();
+
+		}	
+
+	}
+
+
+
+	public function getSupervisorsSpecialEndorsementsSums($start_date, $end_date, $company_id, $office_id)
+
+	{
+
+		$net_premium_p_endorsement = Endorsement::where('company_id', '=', $company_id)->
+
+		whereDate('endorsement_date', '>=', date($start_date))->
+
+		whereDate('endorsement_date', '<=', date($end_date))->
+
+		where('office_id', '=', $office_id)->
+
+		where('is_company', '=', 0)->
+
+		sum('net_premium');
+
+
+
+		$total_p_endorsement = Endorsement::where('company_id', '=', $company_id)->
+
+		whereDate('endorsement_date', '>=', date($start_date))->
+
+		whereDate('endorsement_date', '<=', date($end_date))->
+
+		where('office_id', '=', $office_id)->
+
+		where('is_company', '=', 0)->
+
+		sum('total');
+
+
+
+		$net_premium_c_endorsement = Endorsement::where('company_id', '=', $company_id)->
+
+		whereDate('endorsement_date', '>=', date($start_date))->
+
+		whereDate('endorsement_date', '<=', date($end_date))->
+
+		where('office_id', '=', $office_id)->
+
+		where('is_company', '=', 1)->
+
+		sum('net_premium');
+
+
+
+
+
+		$total_c_endorsement = Endorsement::where('company_id', '=', $company_id)->
+
+		whereDate('endorsement_date', '>=', date($start_date))->
+
+		whereDate('endorsement_date', '<=', date($end_date))->
+
+		where('office_id', '=', $office_id)->
+
+		where('is_company', '=', 1)->
+
+		sum('total');
+
+
+
+		return compact('net_premium_p_endorsement', 'total_p_endorsement', 'net_premium_c_endorsement', 'total_c_endorsement');
+
+	}
+
+	public function searchRefund($endoresment_no, $company_id)
+
+	{	
+
+		$endoresment_no_q = Endorsement::where('endorsement_no', '=', $endoresment_no)
+
+		->where('company_id', '=', $company_id)
+
+		->first();
+
+		if ($endoresment_no_q) 
+
+		{
+
+			return $endoresment_no_q;	
+
+		}
+
+		else
+
+		{
+
+			return "false";
+
+		}
+
+	}
+
+
+
+	public function checkRefunded($endoresment_no, $company_id)
+
+	{	
+
+		$policy_no_q = Endorsement::where('endorsement_no', '=', -1)
+
+		->where('policy_id', '=', $endoresment_no*-1)
+
+		->where('company_id', '=', $company_id)
+
+		->first();
+
+		if ($policy_no_q) 
+
+		{
+
+			return true;	
+
+		}
+
+		else
+
+		{
+
+			return false;
+
+		}
+
+	}
+
+	
+
+	public function getEndoresmentId($endoresment_no, $company_id)
+
+	{	
+
+		$policy_no_q = Endorsement::where('endorsement_no', '=', $endoresment_no)
+
+		->where('company_id', '=', $company_id)
+
+		->first();
+
+		if ($policy_no_q) 
+
+		{
+
+			return $policy_no_q;	
+
+		}
+
+		else
+
+		{
+
+			return "false";
+
+		}
+
+	}
+
+
+
+	//Start	Orient after Edit date 18-12-2016
+
+	public function orientEndorsementPdf($id)
+
+	{	
+
+		// get PDF data to show
+
+		$endorsement_date      = $this->getEndorsement($id)->endorsement_date;
+
+		$policy_start_date  = $this->getEndorsement($id)->policy_start_date;
+
+		$d1         = date('d', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$d2         = date('m', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$d3         = date('Y', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$user_id        = $this->getEndorsement($id)->user_id;
+
+		$serial_no        = $this->getEndorsement($id)->serial_no;
+
+		$plate_no           = $this->getEndorsement($id)->plate_no;
+
+
+
+		$username 		= \AclRepository::getUser($user_id)->name;
+
+		$start_year         = date('Y', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$start_month        = date('m', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$start_day          = date('d', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$policy_end_date    = $this->getEndorsement($id)->policy_end_date;
+
+		$end_year           = date('Y', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$end_month          = date('m', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$end_day            = date('d', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$client_name        = $this->getEndorsement($id)->client_name;
+
+		$chassis_no         =$this->getEndorsement($id)->chassis_no;
+
+		$car_cc         =$this->getEndorsement($id)->car_cc;
+
+		$client_address     = $this->getEndorsement($id)->client_address;
+
+		$transport_passengers  = $this->getEndorsement($id)->transport_passengers;
+
+		$endorsement_no=$this->getEndorsement($id)->endorsement_no;
+
+		$endorsment_type=$this->getEndorsement($id)->endorsment_type_id;
+
+        $passengers=$this->getEndorsement($id)->passenger->passengers;
+
+        $car_weight=$this->getEndorsement($id)->car_weight;
+
+		/*** Policy Informations ****/
+
+		$policy_id         = $this->getEndorsement($id)->policy_id;
+
+		$policy            = $this->getPolicy($policy_id);
+
+		$client_policy     = $policy->client_name;
+
+		$motor_policy	   = $policy->motor_no;
+
+		$chassis_policy    = $policy->chassis_no;
+
+		$passengers_policy = $policy->passengers_id;
+
+		$start_policy	   = $policy->policy_start_date;
+
+		$end_polict        = $policy->policy_end_date;
+
+		$policy_car_cc     = $policy->car_cc;
+
+		$plate_policy      = $policy->plate_no;
+
+		$weight_policy     = $policy->car_weight;
+
+		$code_office        = $this->getEndorsement($id)->office->office_code;
+
+		$start_year_policy         = date('Y', strtotime($policy->policy_start_date));
+
+		$start_month_policy        = date('m', strtotime($policy->policy_start_date));
+
+		$start_day_policy          = date('d', strtotime($policy->policy_start_date));
+
+		$end_year_policy           = date('Y', strtotime($policy->policy_end_date));
+
+		$end_month_policy          = date('m', strtotime($policy->policy_end_date));
+
+		$end_day_policy            = date('d', strtotime($policy->policy_end_date));
+
+		$no_policy=$policy->policy_no;
+
+		if ($policy_car_cc == 0) 
+
+		{
+
+			$policy_car_cc     = "---";
+
+		}
+
+		if ($passengers_policy == 1) 
+
+		{
+
+			$passengers_policy     = "---";
+
+		}
+
+		if ($weight_policy == 0) 
+
+		{
+
+			$weight_policy     = "---";
+
+		}
+
+		if ($plate_policy == "0") 
+
+		{
+
+			$plate_policy = "--";
+
+		}
+
+		else
+
+		{
+
+			$plate_policy = $policy->plate_no;
+
+		}
+
+
+
+		if($endorsment_type==2)
+
+		{
+
+			$edit_type="?????";
+
+		}
+
+		if($endorsment_type==3)
+
+		{ 
+
+			$policy_car_cc     = $car_cc;
+
+			$client_policy     = $client_name;
+
+			$plate_policy      = $plate_no;
+
+			$chassis_policy    = $chassis_no;
+
+			$passengers_policy = $passengers;
+
+			$weight_policy     = $car_weight;
+
+			$edit_type         = "???? ??? ????";
+
+		}
+
+		if($endorsment_type==4)
+
+		{	
+
+			$passengers_policy = $passengers;
+
+			$policy_car_cc     = $car_cc;
+
+			$client_policy     = $client_name;
+
+			$plate_policy      = $plate_no;
+
+			$chassis_policy    = $chassis_no;
+
+			$weight_policy     = $car_weight;
+
+			$edit_type         = "???? ?????? ?????";
+
+		}
+
+		if($endorsment_type==5)
+
+		{
+
+			$plate_policy      = $plate_no;
+
+			$passengers_policy = $passengers;
+
+			$policy_car_cc     = $car_cc;
+
+			$motor_no          = $motor_policy;
+
+			$plate_policy      = $plate_no;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ??? ??????";
+
+		}
+
+		elseif($endorsment_type==6)
+
+		{
+
+			$plate_policy      = $plate_no;
+
+			$policy_car_cc     = $car_cc;
+
+			$passengers_policy = $passengers;
+
+			$client_policy     = $client_name;
+
+			$plate_policy      = $plate_no;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ??? ???????";
+
+		}
+
+		elseif($endorsment_type==7)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$passengers_policy = $passengers;
+
+			$policy_car_cc     = $car_cc;
+
+			$client_policy     = $client_name;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ??? ??????";
+
+		}
+
+		elseif($endorsment_type==8)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$passengers_policy = $passengers;
+
+			$policy_car_cc     = $car_cc;
+
+			$plate_policy      = $plate_no;
+
+			$client_policy     = $client_name;
+
+			$weight_policy     = $car_weight;
+
+			$edit_type         = " ?? ????? ??? ??????? ??? ".$chassis_no;
+
+		}
+
+		elseif($endorsment_type==9)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$passengers_policy = $passengers;
+
+			$plate_policy      = $plate_no;
+
+			$policy_car_cc     = $car_cc;
+
+			$client_policy     = $client_name;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ???? ??????";
+
+		}
+
+		elseif($endorsment_type==10)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$client_policy     = $client_name;
+
+			$passengers_policy = $passengers;
+
+			$plate_policy      = $plate_no;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ????? ??????? ???  " .$car_cc;
+
+		}
+
+		elseif($endorsment_type==11)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$policy_car_cc     = $car_cc;
+
+			$passengers_policy = $passengers;
+
+			$client_policy     = $client_name;
+
+			$chassis_policy    = $chassis_no;
+
+			$plate_policy      = $plate_no;
+
+			$edit_type         = "?? ????? ??? ??????? ???  ".$car_weight." ??";
+
+		}
+
+		elseif($endorsment_type==12)
+
+		{
+
+			$motor_no       = $motor_policy;
+
+			$client_policy  = $client_name;
+
+			$policy_car_cc  = $car_cc;
+
+			$chassis_policy = $chassis_no;
+
+			$weight_policy  = $car_weight;
+
+			$plate_policy   = $plate_no;
+
+			$edit_type      = "?? ????? ??? ??????  ??? ".$passengers." ????";
+
+		}
+
+		elseif($endorsment_type==13)
+
+		{
+
+			$client_policy     = $client_name;
+
+			$motor_no          = $motor_policy;
+
+			$weight_policy     = $car_weight;
+
+			$policy_car_cc     = $car_cc;
+
+			$chassis_policy    = $chassis_no;
+
+			$passengers_policy = $passengers;
+
+			$plate_policy      = $plate_no;
+
+			$edit_type         = "?? ????? ???";
+
+		}
+
+		elseif($endorsment_type ==14)
+
+		{
+
+			$client_policy     = $client_name;
+
+			$chassis_policy    = $chassis_no;
+
+			$motor_no          = $motor_policy;
+
+			$passengers_policy = $passengers;
+
+			$weight_policy     = $car_weight;
+
+			$policy_car_cc     = $car_cc;
+
+			$plate_policy      = $plate_no;
+
+			$edit_type         = "???? ????? ?????";
+
+		}
+
+
+
+		if ($client_address == null) 
+
+		{
+
+			$client_address = "--";
+
+		}
+
+		$plate_no           = $this->getEndorsement($id)->plate_no;
+
+		if ($plate_no == null) 
+
+		{
+
+			$plate_no = "--";
+
+		}
+
+		// $policy_no          = $this->getEndorsement($id)->policy_no;
+
+		$model_id           = $this->getEndorsement($id)->cmodel->ar_model_name;
+
+		if ($model_id == "??? ????") 
+
+		{
+
+			$model_id = "--";
+
+		}
+
+		$manufacture_year   = $this->getEndorsement($id)->manufacture_year;
+
+		if ($manufacture_year == 0) 
+
+		{
+
+			$manufacture_year = "--";
+
+		}
+
+		$nationality_id     = $this->getEndorsement($id)->nationality->ar_nationality_name;
+
+		if ($nationality_id == null) 
+
+		{
+
+			$nationality_id = "--";
+
+		}
+
+		$chassis_no         = $this->getEndorsement($id)->chassis_no;
+
+		$motor_no           = $this->getEndorsement($id)->motor_no;
+
+		if ($motor_no == null) 
+
+		{
+
+			$motor_no = "--";
+
+		}
+
+		$passengers_id      = $this->getEndorsement($id)->passenger->passengers + $transport_passengers;
+
+		if ($passengers_id == 0) 
+
+		{
+
+			$passengers_id = "--";
+
+		}
+
+		$car_cc             = $this->getEndorsement($id)->car_cc;
+
+		if ($car_cc == 0) 
+
+		{
+
+			$car_cc = "--";
+
+		}
+
+		$car_weight         = $this->getEndorsement($id)->car_weight;
+
+		if ($car_weight == 0) 
+
+		{
+
+			$car_weight = "--";
+
+		}
+
+		$net_premium        = $this->getEndorsement($id)->net_premium;
+
+		$relative_stamp     = $this->getEndorsement($id)->relative_stamp;
+
+		$issuance_fees      = $this->getEndorsement($id)->issuance_fees;
+
+		$supervisory_fees   = $this->getEndorsement($id)->supervisory_fees;
+
+		$breadth_stamp      = $this->getEndorsement($id)->breadth_stamp;
+
+		$national_id        = $this->getEndorsement($id)->national_id;
+
+		if ($national_id == 0) 
+
+		{
+
+			$national_id = "--";
+
+		}
+
+		$office_id          = $this->getEndorsement($id)->office->ar_office_name;
+
+		$endorsment_id      = $this->getEndorsement($id)->endorsment->ar_document_type;
+
+		$licencetype        = $this->getEndorsement($id)->licencetype->ar_licence_type;
+
+		$manf_model         = $model_id." ".$manufacture_year;
+
+		$office_endorsment  = $endorsment_id;
+
+		$total              = $this->getEndorsement($id)->total;
+
+		// $plate_licence      = $plate_no." - ".$licencetype;
+
+		$code_office        = $this->getEndorsement($id)->office->office_code;
+
+
+
+		
+
+		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+
+
+
+
+		// set document information
+
+		$pdf->SetCreator(PDF_CREATOR);
+
+		$pdf->SetAuthor('grassavoye');
+
+		$pdf->SetTitle('TCPDF Example 001');
+
+		$pdf->SetSubject('OB System');
+
+		$pdf->SetKeywords('Insurance, PDF');
+
+		$pdf->setPrintHeader(false);
+
+		$pdf->setPrintFooter(false);
+
+
+
+		$pdf->SetTitle($endorsement_date."_".$client_name);
+
+
+
+		$pdf->SetFont('aealarabiya', '', 11);
+
+		// add a page
+
+		$pdf->AddPage();
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<table border="0">
+
+	<tr>
+
+		<th colspan="3" style="text-align: center;" height="30"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+	
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+<br>
+
+<table border="0">
+
+	<tr>
+
+		<th colspan="3" style="text-align: center;" height="30"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+
+
+$tbl = <<<EOD
+
+
+
+
+
+
+
+
+
+
+
+</br>
+
+
+
+
+
+</br>
+
+</br>
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	
+
+	
+
+	<tr>
+
+		<th colspan="2"></th>
+
+		<th colspan="2"></th>
+
+				<th colspan="2"style="height:30px" ></th>
+
+								<th colspan="1"style="height:30px" ></th>
+
+
+
+
+
+	</tr>
+
+	<tr>
+
+<th colspan="2" style="text-align:center">$policy_car_cc </th>
+
+		<th colspan="2" style="text-align:center">$chassis_policy</th>
+
+		<th colspan="2"  style="text-align:right ;width:140px" >$plate_policy </th>
+
+		<th colspan="1"  style="text-align:center" ></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" style="text-align:center"></th>
+
+		<th colspan="2" style="text-align:center"></th>
+
+				<th colspan="3"  style="text-align:center"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="1" style="text-align:center" height="9"></th>
+
+		<th colspan="3" style="text-align:center" height="9">$weight_policy </th>
+
+		<th colspan="2"  style="text-align:left" height="9" style="text-align:center">$passengers_policy</th>
+
+		<th colspan="1"  style="text-align:center"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" style="text-align:center">$national_id</th>
+
+		<th colspan="2" style="text-align:center">$client_policy</th>
+
+				<th colspan="2"  style="text-align:right">$office_id</th>
+
+				<th colspan="1"  style="text-align:left"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="1" height="5" ></th>
+
+		<th colspan="3" ></th>
+
+				<th colspan="3"  ></th>
+
+
+
+	</tr>
+
+	<tr>
+
+	<th colspan="1" style="text-align:left"></th>
+
+		<th colspan="3" style="text-align:center">$end_year_policy / $end_month_policy / $end_day_policy</th>
+
+		<th colspan="2"  style="text-align:right">$start_year_policy / $start_month_policy / $start_day_policy</th>
+
+				<th colspan="1"  style="text-align:center"></th>
+
+
+
+
+
+
+
+	</tr>
+
+	
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="2" height="30">$plate_no</th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3">$client_name </th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" ></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3">$motor_no</th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" ></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3" height="22" style="text-align:left;">$end_year/$end_month/$end_day - $start_year/$start_month/$start_day</th>
+
+		
+
+		<th colspan=""> </th>
+
+		<th colspan="1">----------</th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height=""></th>
+
+		<th colspan="1"></th>
+
+		<th colspan=""> </th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height="18"></th>
+
+		<th colspan="1"></th>
+
+		<th colspan=""> </th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	
+
+	
+
+</table>
+
+
+
+
+
+	
+
+	
+
+	
+
+	<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="2" height="22"></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height=""></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="1"></th>
+
+	</tr><tr>
+
+
+
+		<th colspan="7" height="18">$edit_type</th>
+
+				
+
+
+
+	</tr>
+
+	</table>
+
+EOD;
+
+$pdf->SetMargins(20, 0, 20);
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+		
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<table border="0" style="width:100%" style="text-align: center;">
+
+	<tr>
+
+	
+
+		<th colspan="2" height="22"></th>
+
+		<th colspan="3" > </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+
+
+	<tr>
+
+	
+
+	<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="2" height="">$net_premium</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height="18"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="2" height="">$relative_stamp</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="2" height="">$breadth_stamp</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="2" height="">$supervisory_fees</th>
+
+		<th colspan="3"></th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	
+
+	<tr>
+
+		<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="2" height="">$issuance_fees</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+		
+
+	</tr>
+
+	<tr><th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="2" height="">$total</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+		
+
+	</tr>
+
+	
+
+	
+
+	
+
+	
+
+</table>
+
+EOD;
+
+	$pdf->SetMargins(119, 0, 20);
+
+	$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+	$pdf->Text(67, 245, $username);
+
+$style = array(
+
+    'border' => 1,
+
+    'vpadding' => 'auto',
+
+    'hpadding' => 'auto',
+
+    'fgcolor' => array(0,0,0),
+
+    'bgcolor' => false, //array(255,255,255)
+
+    'module_width' => .5, // width of a single module in points
+
+    'module_height' => .5 // height of a single module in points
+
+);
+
+ $code="??? ?????? :". $id ." ???? ???????  ??? ??????? ??? ??????: ". $client_name  ." ????? ????? ???????: ".$policy_start_date ." ????? ????? ???????: ". $policy_end_date  ." ??? ???????: ". $chassis_no ." ??? ???????: ". $motor_no ."  ";
+
+// QRCODE,L : QR-CODE Low error correction
+
+$pdf->write2DBarcode($code, 'QRCODE,L', 20, 230, 30, 30, $style, 'N');
+
+			$pdf->Text(62, 40, $no_policy);
+
+	$pdf->Text(60, 250, $d3."/".$d2."/".$d1);
+
+	$pdf->Text(60, 255,$serial_no );
+
+	$pdfname = $endorsement_date.".pdf";
+
+	$pdf->Output($pdfname, 'D');
+
+	} 
+
+	//End of OrientPDF
+
+
+
+	//End	Orient after Edit date 18-12-2016 
+
+
+	/*Start Orient Transferred data endorsement PDF*/
+
+	//Start	Orient after Edit date 18-12-2016
+
+	public function orientTransferredEndorsementPdf($id)
+
+	{	
+
+		// get PDF data to show
+
+		$endorsement_date      = $this->getPolicy($id)->issuance_date;
+
+		$policy_start_date  = $this->getPolicy($id)->policy_start_date;
+
+		$d1         = date('d', strtotime($this->getPolicy($id)->issuance_date));
+
+		$d2         = date('m', strtotime($this->getPolicy($id)->issuance_date));
+
+		$d3         = date('Y', strtotime($this->getPolicy($id)->issuance_date));
+
+		$user_id        = $this->getPolicy($id)->user_id;
+
+		$serial_no        = $this->getPolicy($id)->serial_no;
+
+		$plate_no           = $this->getPolicy($id)->plate_no;
+
+
+
+		$username 		= "???????";
+
+		$start_year         = date('Y', strtotime($this->getPolicy($id)->policy_start_date));
+
+		$start_month        = date('m', strtotime($this->getPolicy($id)->policy_start_date));
+
+		$start_day          = date('d', strtotime($this->getPolicy($id)->policy_start_date));
+
+		$policy_end_date    = $this->getPolicy($id)->policy_end_date;
+
+		$end_year           = date('Y', strtotime($this->getPolicy($id)->policy_end_date));
+
+		$end_month          = date('m', strtotime($this->getPolicy($id)->policy_end_date));
+
+		$end_day            = date('d', strtotime($this->getPolicy($id)->policy_end_date));
+
+		$client_name        = $this->getPolicy($id)->client_name;
+
+		$chassis_no         =$this->getPolicy($id)->chassis_no;
+
+		$car_cc         =$this->getPolicy($id)->car_cc;
+
+		$client_address     = $this->getPolicy($id)->client_address;
+
+		$transport_passengers  = $this->getPolicy($id)->transport_passengers;
+
+		$endorsement_no=$this->getPolicy($id)->policy_no;
+
+		$endorsment_type=$this->getPolicy($id)->endorsment_type_id;
+
+        $passengers=$this->getPolicy($id)->passenger->passengers;
+
+        $car_weight=$this->getPolicy($id)->car_weight;
+
+		/*** Policy Informations ****/
+
+		$policy            = $this->getPolicy($id);
+		$policy_id         = $policy->id;
+		$client_policy     = $policy->client_name;
+		$motor_policy	   = $policy->motor_no;
+		$chassis_policy    = $policy->chassis_no;
+		$passengers_policy = $policy->passengers_id;
+		$start_policy	   = $policy->policy_start_date;
+		$end_polict        = $policy->policy_end_date;
+		$policy_car_cc     = $policy->car_cc;
+		$plate_policy      = $policy->plate_no;
+		$weight_policy     = $policy->car_weight;
+		$code_office       = $this->getPolicy($id)->office->office_code;
+		$start_year_policy = date('Y', strtotime($policy->policy_start_date));
+		$start_month_policy = date('m', strtotime($policy->policy_start_date));
+		$start_day_policy   = date('d', strtotime($policy->policy_start_date));
+		$end_year_policy    = date('Y', strtotime($policy->policy_end_date));
+		$end_month_policy   = date('m', strtotime($policy->policy_end_date));
+		$end_day_policy     = date('d', strtotime($policy->policy_end_date));
+		$no_policy			= $policy->policy_no;
+
+		if ($policy_car_cc == 0) 
+
+		{
+
+			$policy_car_cc     = "---";
+
+		}
+
+		if ($passengers_policy == 1) 
+
+		{
+
+			$passengers_policy     = "---";
+
+		}
+
+		if ($weight_policy == 0) 
+
+		{
+
+			$weight_policy     = "---";
+
+		}
+
+		if ($plate_policy == "0") 
+
+		{
+
+			$plate_policy = "--";
+
+		}
+
+		else
+
+		{
+
+			$plate_policy = $policy->plate_no;
+
+		}
+
+
+
+		if($endorsment_type==2)
+
+		{
+
+			$edit_type="?????";
+
+		}
+
+		if($endorsment_type==3)
+
+		{ 
+
+			$policy_car_cc     = $car_cc;
+
+			$client_policy     = $client_name;
+
+			$plate_policy      = $plate_no;
+
+			$chassis_policy    = $chassis_no;
+
+			$passengers_policy = $passengers;
+
+			$weight_policy     = $car_weight;
+
+			$edit_type         = "???? ??? ????";
+
+		}
+
+		if($endorsment_type==4)
+
+		{	
+
+			$passengers_policy = $passengers;
+
+			$policy_car_cc     = $car_cc;
+
+			$client_policy     = $client_name;
+
+			$plate_policy      = $plate_no;
+
+			$chassis_policy    = $chassis_no;
+
+			$weight_policy     = $car_weight;
+
+			$edit_type         = "???? ?????? ?????";
+
+		}
+
+		if($endorsment_type==5)
+
+		{
+
+			$plate_policy      = $plate_no;
+
+			$passengers_policy = $passengers;
+
+			$policy_car_cc     = $car_cc;
+
+			$motor_no          = $motor_policy;
+
+			$plate_policy      = $plate_no;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ??? ??????";
+
+		}
+
+		elseif($endorsment_type==6)
+
+		{
+
+			$plate_policy      = $plate_no;
+
+			$policy_car_cc     = $car_cc;
+
+			$passengers_policy = $passengers;
+
+			$client_policy     = $client_name;
+
+			$plate_policy      = $plate_no;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ??? ???????";
+
+		}
+
+		elseif($endorsment_type==7)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$passengers_policy = $passengers;
+
+			$policy_car_cc     = $car_cc;
+
+			$client_policy     = $client_name;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ??? ??????";
+
+		}
+
+		elseif($endorsment_type==8)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$passengers_policy = $passengers;
+
+			$policy_car_cc     = $car_cc;
+
+			$plate_policy      = $plate_no;
+
+			$client_policy     = $client_name;
+
+			$weight_policy     = $car_weight;
+
+			$edit_type         = " ?? ????? ??? ??????? ??? ".$chassis_no;
+
+		}
+
+		elseif($endorsment_type==9)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$passengers_policy = $passengers;
+
+			$plate_policy      = $plate_no;
+
+			$policy_car_cc     = $car_cc;
+
+			$client_policy     = $client_name;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ???? ??????";
+
+		}
+
+		elseif($endorsment_type==10)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$client_policy     = $client_name;
+
+			$passengers_policy = $passengers;
+
+			$plate_policy      = $plate_no;
+
+			$weight_policy     = $car_weight;
+
+			$chassis_policy    = $chassis_no;
+
+			$edit_type         = "?? ????? ????? ??????? ???  " .$car_cc;
+
+		}
+
+		elseif($endorsment_type==11)
+
+		{
+
+			$motor_no          = $motor_policy;
+
+			$policy_car_cc     = $car_cc;
+
+			$passengers_policy = $passengers;
+
+			$client_policy     = $client_name;
+
+			$chassis_policy    = $chassis_no;
+
+			$plate_policy      = $plate_no;
+
+			$edit_type         = "?? ????? ??? ??????? ???  ".$car_weight." ??";
+
+		}
+
+		elseif($endorsment_type==12)
+
+		{
+
+			$motor_no       = $motor_policy;
+
+			$client_policy  = $client_name;
+
+			$policy_car_cc  = $car_cc;
+
+			$chassis_policy = $chassis_no;
+
+			$weight_policy  = $car_weight;
+
+			$plate_policy   = $plate_no;
+
+			$edit_type      = "?? ????? ??? ??????  ??? ".$passengers." ????";
+
+		}
+
+		elseif($endorsment_type==13)
+
+		{
+
+			$client_policy     = $client_name;
+
+			$motor_no          = $motor_policy;
+
+			$weight_policy     = $car_weight;
+
+			$policy_car_cc     = $car_cc;
+
+			$chassis_policy    = $chassis_no;
+
+			$passengers_policy = $passengers;
+
+			$plate_policy      = $plate_no;
+
+			$edit_type         = "?? ????? ???";
+
+		}
+
+		elseif($endorsment_type ==14)
+
+		{
+
+			$client_policy     = $client_name;
+
+			$chassis_policy    = $chassis_no;
+
+			$motor_no          = $motor_policy;
+
+			$passengers_policy = $passengers;
+
+			$weight_policy     = $car_weight;
+
+			$policy_car_cc     = $car_cc;
+
+			$plate_policy      = $plate_no;
+
+			$edit_type         = "???? ????? ?????";
+
+		}
+
+
+
+		if ($client_address == null) 
+
+		{
+
+			$client_address = "--";
+
+		}
+
+		$plate_no           = $this->getPolicy($id)->plate_no;
+
+		if ($plate_no == null) 
+
+		{
+
+			$plate_no = "--";
+
+		}
+
+		// $policy_no          = $this->getPolicy($id)->policy_no;
+
+		$model_id           = $this->getPolicy($id)->cmodel->ar_model_name;
+
+		if ($model_id == "??? ????") 
+
+		{
+
+			$model_id = "--";
+
+		}
+
+		$manufacture_year   = $this->getPolicy($id)->manufacture_year;
+
+		if ($manufacture_year == 0) 
+
+		{
+
+			$manufacture_year = "--";
+
+		}
+
+		$nationality_id     = $this->getPolicy($id)->nationality->ar_nationality_name;
+
+		if ($nationality_id == null) 
+
+		{
+
+			$nationality_id = "--";
+
+		}
+
+		$chassis_no         = $this->getPolicy($id)->chassis_no;
+
+		$motor_no           = $this->getPolicy($id)->motor_no;
+
+		if ($motor_no == null) 
+
+		{
+
+			$motor_no = "--";
+
+		}
+
+		$passengers_id      = $this->getPolicy($id)->passenger->passengers + $transport_passengers;
+
+		if ($passengers_id == 0) 
+
+		{
+
+			$passengers_id = "--";
+
+		}
+
+		$car_cc             = $this->getPolicy($id)->car_cc;
+
+		if ($car_cc == 0) 
+
+		{
+
+			$car_cc = "--";
+
+		}
+
+		$car_weight         = $this->getPolicy($id)->car_weight;
+
+		if ($car_weight == 0) 
+
+		{
+
+			$car_weight = "--";
+
+		}
+
+		$net_premium        = $this->getPolicy($id)->net_premium;
+
+		$relative_stamp     = $this->getPolicy($id)->relative_stamp;
+
+		$issuance_fees      = $this->getPolicy($id)->issuance_fees;
+
+		$supervisory_fees   = $this->getPolicy($id)->supervisory_fees;
+
+		$breadth_stamp      = $this->getPolicy($id)->breadth_stamp;
+
+		$national_id        = $this->getPolicy($id)->national_id;
+
+		if ($national_id == 0) 
+
+		{
+
+			$national_id = "--";
+
+		}
+
+		$office_id          = $this->getPolicy($id)->office->ar_office_name;
+
+		$endorsment_id      = $this->getPolicy($id)->endorsment->ar_document_type;
+
+		$licencetype        = $this->getPolicy($id)->licencetype->ar_licence_type;
+
+		$manf_model         = $model_id." ".$manufacture_year;
+
+		$office_endorsment  = $endorsment_id;
+
+		$total              = $this->getPolicy($id)->total;
+
+		// $plate_licence      = $plate_no." - ".$licencetype;
+
+		$code_office        = $this->getPolicy($id)->office->office_code;
+
+
+
+		
+
+		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+
+
+
+
+		// set document information
+
+		$pdf->SetCreator(PDF_CREATOR);
+
+		$pdf->SetAuthor('grassavoye');
+
+		$pdf->SetTitle('TCPDF Example 001');
+
+		$pdf->SetSubject('OB System');
+
+		$pdf->SetKeywords('Insurance, PDF');
+
+		$pdf->setPrintHeader(false);
+
+		$pdf->setPrintFooter(false);
+
+
+
+		$pdf->SetTitle($endorsement_date."_".$client_name);
+
+
+
+		$pdf->SetFont('aealarabiya', '', 11);
+
+		// add a page
+
+		$pdf->AddPage();
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<table border="0">
+
+	<tr>
+
+		<th colspan="3" style="text-align: center;" height="25"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+	
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+<br>
+
+<table border="0">
+
+	<tr>
+
+		<th colspan="3" style="text-align: center;" height="30"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+
+
+$tbl = <<<EOD
+
+
+
+
+
+
+
+
+
+
+
+</br>
+
+
+
+
+
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	
+
+	
+
+	<tr>
+
+		<th colspan="2"></th>
+
+		<th colspan="2"></th>
+
+				<th colspan="2"style="height:35px" ></th>
+
+								<th colspan="1"style="height:30px" ></th>
+
+
+
+
+
+	</tr>
+
+	<tr>
+
+<th colspan="2" style="text-align:center">$policy_car_cc </th>
+
+		<th colspan="2" style="text-align:center">$chassis_policy</th>
+
+		<th colspan="2"  style="text-align:right ;width:140px" >$plate_policy </th>
+
+		<th colspan="1"  style="text-align:center" ></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" style="text-align:center"></th>
+
+		<th colspan="2" style="text-align:center"></th>
+
+				<th colspan="3"  style="text-align:center"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="1" style="text-align:center" height="9"></th>
+
+		<th colspan="3" style="text-align:center" height="9">$weight_policy </th>
+
+		<th colspan="2"  style="text-align:left" height="9" style="text-align:center">$passengers_policy</th>
+
+		<th colspan="1"  style="text-align:center"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" style="text-align:center">$national_id</th>
+
+		<th colspan="2" style="text-align:center">$client_policy</th>
+
+				<th colspan="2"  style="text-align:right">$office_id</th>
+
+				<th colspan="1"  style="text-align:left"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="1" height="5" ></th>
+
+		<th colspan="3" ></th>
+
+				<th colspan="3"  ></th>
+
+
+
+	</tr>
+
+	<tr>
+
+	<th colspan="1" style="text-align:left"></th>
+
+		<th colspan="3" style="text-align:center">$end_year_policy / $end_month_policy / $end_day_policy</th>
+
+		<th colspan="2"  style="text-align:right">$start_year_policy / $start_month_policy / $start_day_policy</th>
+
+				<th colspan="1"  style="text-align:center"></th>
+
+
+
+
+
+
+
+	</tr>
+
+	
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="2" height="25">$plate_no</th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3">$client_name </th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" ></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3">$motor_no</th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" ></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3" height="22" style="text-align:left;">$end_year/$end_month/$end_day - $start_year/$start_month/$start_day</th>
+
+		
+
+		<th colspan=""> </th>
+
+		<th colspan="1">----------</th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height=""></th>
+
+		<th colspan="1"></th>
+
+		<th colspan=""> </th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height="18"></th>
+
+		<th colspan="1"></th>
+
+		<th colspan=""> </th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	
+
+	
+
+</table>
+
+
+
+
+
+	
+<br>
+
+<br>
+	
+
+	
+
+	<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="2" height="22"></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height=""></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="1"></th>
+
+	</tr><tr>
+
+
+
+		<th colspan="7" height="18">$edit_type</th>
+
+				
+
+
+
+	</tr>
+
+	</table>
+
+EOD;
+
+$pdf->SetMargins(20, 0, 20);
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+		
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+
+
+<br>
+
+<table border="0" style="width:100%" style="text-align: center;">
+
+	<tr>
+
+	
+
+		<th colspan="2" height="22"></th>
+
+		<th colspan="3" > </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+
+
+	<tr>
+
+	
+
+	<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="4" height="">$net_premium</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height="18"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="4" height="">$relative_stamp</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="4" height="">$breadth_stamp</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="4" height="">$supervisory_fees</th>
+
+		<th colspan="3"></th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	
+
+	<tr>
+
+		<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="4" height="">$issuance_fees</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+		
+
+	</tr>
+<tr>
+
+		<th colspan="2" height="15"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="4" height=""></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+		
+
+	</tr>
+	<tr><th colspan="2" height="22"></th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="4" height="">$total</th>
+
+		<th colspan="3"> </th>
+
+		<th colspan="3"></th>
+
+		
+
+	</tr>
+
+	
+
+	
+
+	
+
+	
+
+</table>
+
+EOD;
+
+	$pdf->SetMargins(119, 0, 20);
+
+	$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+	$pdf->Text(67, 245, $username);
+
+$style = array(
+
+    'border' => 1,
+
+    'vpadding' => 'auto',
+
+    'hpadding' => 'auto',
+
+    'fgcolor' => array(0,0,0),
+
+    'bgcolor' => false, //array(255,255,255)
+
+    'module_width' => .5, // width of a single module in points
+
+    'module_height' => .5 // height of a single module in points
+
+);
+
+ $code="??? ?????? :". $id ." ???? ???????  ??? ??????? ??? ??????: ". $client_name  ." ????? ????? ???????: ".$policy_start_date ." ????? ????? ???????: ". $policy_end_date  ." ??? ???????: ". $chassis_no ." ??? ???????: ". $motor_no ."  ";
+
+// QRCODE,L : QR-CODE Low error correction
+
+$pdf->write2DBarcode($code, 'QRCODE,L', 20, 230, 30, 30, $style, 'N');
+
+			$pdf->Text(62, 50, $no_policy);
+
+	$pdf->Text(60, 250, $d3."/".$d2."/".$d1);
+
+	$pdf->Text(60, 255,$serial_no );
+
+	$pdfname = $endorsement_date.".pdf";
+
+	$pdf->Output($pdfname, 'D');
+
+	} 
+
+	//End of OrientPDF
+
+
+
+	//End	Orient after Edit date 18-12-2016 
+
+
+	/*End Orient Transferred data endorsement PDF*/
+
+
+
+	//Start of takafulPdf 
+
+	public function takafulEndorsementPdf($id)
+
+	{
+
+		// get PDF data to show
+
+		$endorsement_date      = $this->getEndorsement($id)->endorsement_date;
+
+		$policy_start_date  = $this->getEndorsement($id)->policy_start_date;
+
+		$d1                 = date('d', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$d2                 = date('m', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$d3                 = date('Y', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$user_id            = $this->getEndorsement($id)->user_id;
+
+		$username 			= \AclRepository::getUser($user_id)->name;
+
+		$start_year         = date('Y', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$start_month        = date('m', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$start_day          = date('d', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$policy_end_date    = $this->getEndorsement($id)->policy_end_date;
+
+		$end_year           = date('Y', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$end_month          = date('m', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$end_day            = date('d', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$client_name        = $this->getEndorsement($id)->client_name;
+
+		$client_address     = $this->getEndorsement($id)->client_address;
+
+		if ($client_address == null) 
+
+		{
+
+			$client_address = "--";
+
+		}
+
+		$plate_no           = $this->getEndorsement($id)->plate_no;
+
+		if ($plate_no == null) 
+
+		{
+
+			$plate_no = "--";
+
+		}
+
+		// $policy_no          = $this->getEndorsement($id)->policy_no;
+
+		$model_id           = $this->getEndorsement($id)->cmodel->ar_model_name;
+
+		if ($model_id == "??? ????") 
+
+		{
+
+			$model_id = "--";
+
+		}
+
+		$manufacture_year   = $this->getEndorsement($id)->manufacture_year;
+
+		if ($manufacture_year == 0) 
+
+		{
+
+			$manufacture_year = "--";
+
+		}
+
+		$nationality_id     = $this->getEndorsement($id)->nationality->ar_nationality_name;
+
+		if ($nationality_id == null) 
+
+		{
+
+			$nationality_id = "--";
+
+		}
+
+		$chassis_no         = $this->getEndorsement($id)->chassis_no;
+
+		$motor_no           = $this->getEndorsement($id)->motor_no;
+
+		if ($motor_no == null) 
+
+		{
+
+			$motor_no = "--";
+
+		}
+
+		$passengers_id      = $this->getEndorsement($id)->passenger->passengers;
+
+		if ($passengers_id == 0) 
+
+		{
+
+			$passengers_id = "--";
+
+		}
+
+		$car_cc             = $this->getEndorsement($id)->car_cc;
+
+		if ($car_cc == 0) 
+
+		{
+
+			$car_cc = "--";
+
+		}
+
+		$car_weight         = $this->getEndorsement($id)->car_weight;
+
+		if ($car_weight == 0) 
+
+		{
+
+			$car_weight = "--";
+
+		}
+
+		$net_premium        = $this->getEndorsement($id)->net_premium;
+
+		$relative_stamp     = $this->getEndorsement($id)->relative_stamp;
+
+		$issuance_fees      = $this->getEndorsement($id)->issuance_fees;
+
+		$supervisory_fees   = $this->getEndorsement($id)->supervisory_fees;
+
+		$breadth_stamp      = $this->getEndorsement($id)->breadth_stamp;
+
+		$national_id        = $this->getEndorsement($id)->national_id;
+
+		if ($national_id == 0) 
+
+		{
+
+			$national_id = "--";
+
+		}
+
+		$office_id          = $this->getEndorsement($id)->office->ar_office_name;
+
+		$endorsment_id      = $this->getEndorsement($id)->endorsment->ar_document_type;
+
+		$licencetype        = $this->getEndorsement($id)->licencetype->ar_licence_type;
+
+		$manf_model         = $model_id." ".$manufacture_year;
+
+		$office_endorsment  = $endorsment_id;
+
+		$total              = $this->getEndorsement($id)->total;
+
+		$plate_licence      = $plate_no." - ".$licencetype;
+
+		$code_office        = $this->getEndorsement($id)->office->office_code;
+
+		
+
+		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+
+
+
+
+		// set document information
+
+		$pdf->SetCreator(PDF_CREATOR);
+
+		$pdf->SetAuthor('grassavoye');
+
+		$pdf->SetTitle('TCPDF Example 001');
+
+		$pdf->SetSubject('OB System');
+
+		$pdf->SetKeywords('Insurance, PDF');
+
+		$pdf->setPrintHeader(false);
+
+		$pdf->setPrintFooter(false);
+
+
+
+		$pdf->SetTitle($endorsement_date."_".$client_name);
+
+
+
+		$pdf->SetFont('aealarabiya', '', 11);
+
+// add a page
+
+		$pdf->AddPage();
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+<table border="0">
+
+	
+
+	<tr>
+
+		<th colspan="5" style="text-align: center;" height="20"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="5" style="text-align: center;" height="20"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="5" style="text-align: center;" height="20"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="5" style="text-align: center;" height="20"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="5" style="text-align: center;" height="20"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="5" style="text-align: center;" height="20"></th>
+
+		<th colspan="5" style="text-align: center;"></th>
+
+	</tr>
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="3"    height= "20">$end_year</th>
+
+		<th colspan="1"    height="25">$end_month</th>
+
+		<th colspan="1"    height="25" align="center">$end_day</th>
+
+		<th colspan="1"    height="25"  align="right">$start_year</th>
+
+		<th colspan="0.5"  height="25"  align="center">$start_month</th>
+
+		<th colspan="4"    align="left">$start_day</th>
+
+	</tr>	
+
+</table>
+
+
+
+<br>
+
+<br>
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="3"></th>
+
+		<th colspan="6"></th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3">$national_id</th>
+
+		<th colspan="6">$client_name</th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3">$client_address</th>
+
+		<th colspan="6">$nationality_id</th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="3" height="20">$manf_model</th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3" >$plate_licence</th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3" height="20">$motor_no</th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3" >?$chassis_no</th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3" height="20">$car_cc</th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3">$passengers_id</th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3" height="20">--</th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3">$car_weight</th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	
+
+	
+
+	
+
+</table>
+
+EOD;
+
+$pdf->SetMargins(20, 0, 20);
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+<table border="0" style="width:100%" style="text-align: center;">
+
+	<tr>
+
+		<th colspan="1" height="">$net_premium</th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+
+
+	<tr>
+
+		<th colspan="1" height="">$relative_stamp</th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	
+
+	<tr>
+
+		<th colspan="1" height=""></th>
+
+		<th colspan="1">$breadth_stamp </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="1" height="">$supervisory_fees</th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="1" height="">$issuance_fees</th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="3"></th>
+
+	</tr>
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+</table>
+
+EOD;
+
+	$pdf->SetMargins(119, 0, 20);
+
+	$pdf->writeHTML($tbl, true, false, false, false, '');
+
+	// $total='25147147';
+
+	$pdf->SetTextColor(0, 0, 0, 100);
+
+	$pdf->Text(120, 267, $total);
+
+		$pdf->Text(80, 254, $code_office);
+
+		$pdf->Text(46, 238, $username);
+
+		$pdf->Text(62, 267, $d3."/".$d2."/".$d1);
+
+
+
+	$pdfname = $endorsement_date.".pdf";
+
+	$pdf->Output($pdfname, 'D');
+
+
+
+	} //End of takafulPdf
+
+
+
+	//Start of misrInsurancePdf 
+
+	public function misrInsuranceEndorsementPdf($id)
+
+	{
+
+		$endorsement_date      = $this->getEndorsement($id)->endorsement_date;
+
+		$policy_start_date  = $this->getEndorsement($id)->policy_start_date;
+
+		$d1                 = date('d', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$d2                 = date('m', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$d3                 = date('Y', strtotime($this->getEndorsement($id)->endorsement_date));
+
+		$user_id            = $this->getEndorsement($id)->user_id;
+
+		$username 		    = \AclRepository::getUser($user_id)->name;
+
+		$start_year         = date('Y', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$start_month        = date('m', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$start_day          = date('d', strtotime($this->getEndorsement($id)->policy_start_date));
+
+		$policy_end_date    = $this->getEndorsement($id)->policy_end_date;
+
+		$end_year           = date('Y', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$end_month          = date('m', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$end_day            = date('d', strtotime($this->getEndorsement($id)->policy_end_date));
+
+		$client_name        = $this->getEndorsement($id)->client_name;
+
+		$client_address     = $this->getEndorsement($id)->client_address;
+
+		if ($client_address == null) 
+
+		{
+
+			$client_address = "--";
+
+		}
+
+		$plate_no           = $this->getEndorsement($id)->plate_no;
+
+		if ($plate_no == null) 
+
+		{
+
+			$plate_no = "--";
+
+		}
+
+		// $policy_no          = $this->getEndorsement($id)->policy_no;
+
+		$model_id           = $this->getEndorsement($id)->cmodel->ar_model_name;
+
+		if ($model_id == "??? ????") 
+
+		{
+
+			$model_id = "--";
+
+		}
+
+		$manufacture_year   = $this->getEndorsement($id)->manufacture_year;
+
+		if ($manufacture_year == 0) 
+
+		{
+
+			$manufacture_year = "--";
+
+		}
+
+		$nationality_id     = $this->getEndorsement($id)->nationality->ar_nationality_name;
+
+		if ($nationality_id == null) 
+
+		{
+
+			$nationality_id = "--";
+
+		}
+
+		$chassis_no         = $this->getEndorsement($id)->chassis_no;
+
+		$motor_no           = $this->getEndorsement($id)->motor_no;
+
+		if ($motor_no == null) 
+
+		{
+
+			$motor_no = "--";
+
+		}
+
+		$passengers_id      = $this->getEndorsement($id)->passenger->passengers;
+
+		if ($passengers_id == 0) 
+
+		{
+
+			$passengers_id = "--";
+
+		}
+
+		$car_cc             = $this->getEndorsement($id)->car_cc;
+
+		if ($car_cc == 0) 
+
+		{
+
+			$car_cc = "--";
+
+		}
+
+		$car_weight         = $this->getEndorsement($id)->car_weight;
+
+		if ($car_weight == 0) 
+
+		{
+
+			$car_weight = "--";
+
+		}
+
+		$net_premium        = $this->getEndorsement($id)->net_premium;
+
+		$relative_stamp     = $this->getEndorsement($id)->relative_stamp;
+
+		$issuance_fees      = $this->getEndorsement($id)->issuance_fees;
+
+		$supervisory_fees   = $this->getEndorsement($id)->supervisory_fees;
+
+		$breadth_stamp      = $this->getEndorsement($id)->breadth_stamp;
+
+		$national_id        = $this->getEndorsement($id)->national_id;
+
+		if ($national_id == 0) 
+
+		{
+
+			$national_id = "--";
+
+		}
+
+		$office_id          = $this->getEndorsement($id)->office->ar_office_name;
+
+		$endorsment_id      = $this->getEndorsement($id)->endorsment->ar_document_type;
+
+		$licencetype        = $this->getEndorsement($id)->licencetype->ar_licence_type;
+
+		$manf_model         = $model_id." ".$manufacture_year;
+
+		$office_endorsment  = $endorsment_id;
+
+		$total              = $this->getEndorsement($id)->total;
+
+		$plate_licence      = $plate_no." - ".$licencetype;
+
+		$code_office        = $this->getEndorsement($id)->office->office_code;
+
+		
+
+		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+
+
+
+
+		// set document information
+
+		$pdf->SetCreator(PDF_CREATOR);
+
+		$pdf->SetAuthor('grassavoye');
+
+		$pdf->SetTitle('TCPDF Example 001');
+
+		$pdf->SetSubject('OB System');
+
+		$pdf->SetKeywords('Insurance, PDF');
+
+		$pdf->setPrintHeader(false);
+
+		$pdf->setPrintFooter(false);
+
+
+
+		$pdf->SetTitle($endorsement_date."_".$client_name);
+
+
+
+		$pdf->SetFont('aealarabiya', '', 11);
+
+// add a page
+
+		$pdf->AddPage();//End of ta
+
+$tbl = <<<EOD
+
+
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="3"></th>
+
+		<th colspan="6"></th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+	<tr>
+
+
+
+		<th colspan="2" align="center"> </th>
+
+		<th colspan="4" align="center"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" align="center"> </th>
+
+		<th colspan="4" align="center"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" align="center"> </th>
+
+		<th colspan="4" align="center"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" align="center"> </th>
+
+		<th colspan="4" align="center"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" align="center"> </th>
+
+		<th colspan="4" align="center"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="2"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="2" align="center"> </th>
+
+		<th colspan="4" align="center"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="2" align="left">55</th>
+
+	</tr>
+
+	
+
+</table>
+
+EOD;
+
+
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+
+
+<br>
+
+<br>
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	<tr>
+
+		<th colspan="3" height="22"></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3"></th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="1" height=""></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="4">$end_year / $end_month / $end_day</th>
+
+		<th colspan="2" align="center">$start_year/ $start_month / $start_day</th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3" height="22"></th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3">$client_name</th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3" height="22">$national_id</th>
+
+		<th colspan="1"></th>
+
+		<th colspan="3">$client_address</th>
+
+		<th colspan="1"></th>
+
+	</tr>
+
+	
+
+</table>
+
+EOD;
+
+$pdf->SetMargins(20, 0, 20);
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+
+
+$tbl = <<<EOD
+
+<br>
+
+
+
+<br>
+
+<table border="0" style="width:100%" style="text-align: right;">
+
+	
+
+	<tr>
+
+		<th colspan="3"   align="center"></th>
+
+		<th colspan="3" align="center"></th>
+
+		<th colspan="2"></th>
+
+		<th colspan="1"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3"   align="center">$manufacture_year</th>
+
+		<th colspan="3" align="center">$model_id</th>
+
+		<th colspan="2">$plate_licence</th>
+
+		<th colspan="1"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3"   align="center"></th>
+
+		<th colspan="3" align="center">$passengers_id</th>
+
+		<th colspan="2">$chassis_no</th>
+
+		<th colspan="1"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3"   align="center">$motor_no</th>
+
+		<th colspan="3" align="center"></th>
+
+		<th colspan="2"></th>
+
+		<th colspan="1"></th>
+
+
+
+	</tr>
+
+	<tr>
+
+		<th colspan="3"   align="center">$endorsment_id</th>
+
+		<th colspan="3" align="center">$car_weight</th>
+
+		<th colspan="2">$car_cc</th>
+
+		<th colspan="1"></th>
+
+
+
+	</tr>
+
+	
+
+	
+
+</table>
+
+EOD;
+
+$pdf->SetMargins(20, 0, 20);
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+$tbl = <<<EOD
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+
+<table border="0" style="width:100%" style="text-align: center;">
+
+	<tr>
+
+		<th colspan="1" height=""></th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="1" align:"right"></th>
+
+	</tr>
+
+
+
+	<tr>
+
+		<th colspan="1" height=""></th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="2" align:"right">$net_premium</th>
+
+		<th colspan="1" align:"right"></th>
+
+	</tr>
+
+	
+
+	<tr><th colspan="1" height="22"></th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="2" align:"right">$relative_stamp</th>
+
+		<th colspan="1" align:"right"></th>
+
+	</tr>
+
+	<tr>
+
+		<th colspan="1" height="22"></th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="2"  height="" align:"right">$breadth_stamp</th>
+
+		<th colspan="1"  height="" align:"right"></th>
+
+	</tr>
+
+	<tr><th colspan="1" height="7"></th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="2" align:"right">$supervisory_fees</th>
+
+		<th colspan="1" align:"right"></th>
+
+	</tr>
+
+	
+
+	<tr>
+
+		<th colspan="1" height=""></th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="2"  height="" align:"right">$issuance_fees</th>
+
+		<th colspan="1"  height="" align:"right"></th>
+
+	</tr>
+
+	
+
+	
+
+	<tr>
+
+		<th colspan="1" height=""></th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="1" align:"right"></th>
+
+	</tr>
+
+	
+
+	
+
+	
+
+	<tr>
+
+		<th colspan="1" height=""></th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1"> </th>
+
+		<th colspan="1" align:"right"></th>
+
+		<th colspan="2"  height="" align:"right">$total</th>
+
+		<th colspan="1"  height="" align:"right"></th>
+
+	</tr>
+
+</table>
+
+EOD;
+
+	$pdf->SetMargins(119, 0, 20);
+
+	$pdf->writeHTML($tbl, true, false, false, false, '');
+
+$pdf->Text(180, 265, $code_office);
+
+$pdf->Text(30, 225, $username);
+
+$pdf->Text(50, 250, $d3."/".$d2."/".$d1);
+
+
+
+
+
+	
+
+	$pdfname = $endorsement_date.".pdf";
+
+	$pdf->Output($pdfname, 'I');
+
+	} 
+
+	//End of misrInsurancePdf
+
+	
+
+	/**************Statistics**************/
+
+	public function checkofficeendoresment($office,$search_start_date,$search_end_date)
+
+	{		
+
+		return Endorsement::where('company_id', '=', $office)->whereDate('endorsement_date', '>=', date($search_start_date))->whereDate('endorsement_date','<=',$search_end_date)->get();
+
+	}
+
+
+
+	public function checkCompanyEndoresment($company,$search_start_date,$search_end_date)
+
+	{	
+
+		// return endorsement::where('company_id', '=', $company)->whereDate('endorsement_date', '>=', date($search_start_date))->whereDate('endorsement_date','<=',$search_end_date)->get();
+
+		$net_premium = Endorsement::where('company_id', '=', $company)->whereDate('endorsement_date', '>=', date($search_start_date))->whereDate('endorsement_date','<=',$search_end_date)->sum('net_premium');	
+
+		$total = Endorsement::where('company_id', '=', $company)->whereDate('endorsement_date', '>=', date($search_start_date))->whereDate('endorsement_date','<=',$search_end_date)->sum('total');
+
+		return compact('net_premium', 'total');
+
+	}
+
+
+
+	public function SearchEndoresment($company,$licencetype,$office_id)
+
+	{
+
+		$selected_columns=array('office_id','company_id','endorsement_no','policy_id');
+
+		return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+		where('licence_type_id', '=', $licencetype)->
+
+		where('office_id','=',$office_id)->
+
+		where('endorsement_no','=',-1)
+
+		->select($selected_columns)->get();
+
+	}	
+
+
+
+	public function SearchLicenceendoresmentsExcelResult($company, $licencetype,$office_id, $policy_start_date, $policy_end_date)
+
+	/*{
+
+		if($licencetype==5)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','passengers_id','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp', 'issuance_fees','client_name');
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [5,6, 7, 8,9,10,11,13])->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		elseif($licencetype==2 )
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','car_weight','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp','issuance_fees','client_name');
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [2,3,4,24,25])->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		if($licencetype==22 )
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','passengers_id','car_weight','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp','issuance_fees','client_name');
+
+
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			where('licence_type_id', '=', $licencetype)->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+		}
+
+		if($licencetype==30)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','is_company','endorsement_date', 'policy_start_date', 'policy_end_date', 'chassis_no','plate_no', 'motor_no', 'manufacture_year','model_id','client_address','total','net_premium','supervisory_fees','relative_stamp' , 'breadth_stamp','issuance_fees','client_name');
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [14,15, 16, 17,18,19,20,21,37,34,35,36,26,27,28,29])->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}		
+
+		if($licencetype==1)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','is_company','endorsement_date', 'policy_start_date', 'policy_end_date', 'chassis_no','plate_no','licence_img_path', 'motor_no', 'manufacture_year','model_id','car_cc','client_address','total','net_premium', 'supervisory_fees','relative_stamp','breadth_stamp', 'issuance_fees','client_name');
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype','policies'])->where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [1, 12, 31,32,33])->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		else
+
+		{
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			where('licence_type_id', '=', $licencetype)->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+	}*/
+
+	{
+
+		if($licencetype==5)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','passengers_id','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp', 'issuance_fees','client_name','transport_passengers');
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [5,6, 7, 8,9,10,11,13])->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		elseif($licencetype==2 )
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','car_weight','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp','issuance_fees','client_name','transport_passengers');
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [2,3,4,24,25,23])->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+		}
+
+		if($licencetype==22 )
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','passengers_id','car_weight','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp','issuance_fees','client_name','transport_passengers');
+
+
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			where('licence_type_id', '=', $licencetype)->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		if($licencetype==30)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date', 'chassis_no','plate_no', 'motor_no', 'manufacture_year','model_id','client_address','total','net_premium','supervisory_fees','relative_stamp' , 'breadth_stamp','issuance_fees','client_name');
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [14,15, 16, 17,18,19,20,21,37,34,35,36,26,27,28,29,30])->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}		
+
+		if($licencetype==1)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date', 'chassis_no','plate_no','licence_img_path', 'motor_no', 'manufacture_year','model_id','car_cc','client_address','total','net_premium', 'supervisory_fees','relative_stamp','breadth_stamp', 'issuance_fees','client_name','transport_passengers');
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [1, 12, 31,32,33])->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		else
+
+		{
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			where('licence_type_id', '=', $licencetype)->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','!=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+	}
+
+	
+
+	public function SearchLicenceenrefundedExcelResult($company, $licencetype,$office_id=array(), $policy_start_date, $policy_end_date)
+
+	/*{
+
+		if($licencetype==5)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','passengers_id','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp', 'issuance_fees','client_name');
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [5,6, 7, 8,9,10,11,13])->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+
+
+		}
+
+		elseif($licencetype==2 )
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','car_weight','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp','issuance_fees','client_name');
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [2,3,4,24,25])->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+		}
+
+		if($licencetype==22 )
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','passengers_id','car_weight','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp','issuance_fees','client_name');
+
+
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			where('licence_type_id', '=', $licencetype)->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+		}
+
+		if($licencetype==30)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','endorsement_date', 'policy_start_date', 'policy_end_date', 'chassis_no','plate_no', 'motor_no', 'manufacture_year','model_id','client_address','total','net_premium','supervisory_fees','relative_stamp' , 'breadth_stamp','issuance_fees','client_name');
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [14,15, 16, 17,18,19,20,21,37,34,35,36,26,27,28,29])->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+		}		
+
+		if($licencetype==1)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','is_company','endorsement_date', 'policy_start_date', 'policy_end_date', 'chassis_no','plate_no','licence_img_path', 'motor_no', 'manufacture_year','model_id','car_cc','client_address','total','net_premium', 'supervisory_fees','relative_stamp','breadth_stamp', 'issuance_fees','client_name');
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [1, 12, 31,32,33])->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+		}
+
+
+
+
+
+
+
+		
+
+		
+
+		else
+
+
+
+		{
+
+			return Endorsement::with(['cmodel', 'passenger', 'company', 'office',  'licencetype'])->where('company_id', '=', $company)->
+
+			where('licence_type_id', '=', $licencetype)->
+
+			where('office_id','=',$office_id)->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+
+
+		}
+
+	}*/
+
+	{
+
+		if($licencetype==5)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','passengers_id','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp', 'issuance_fees','client_name','transport_passengers');
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [5,6, 7, 8,9,10,11,13])->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		elseif($licencetype==2 )
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','car_weight','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp','issuance_fees','client_name','transport_passengers');
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [2,3,4,23,24,25])->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+
+
+		}
+
+		if($licencetype==22 )
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date',   'chassis_no','plate_no','motor_no', 'manufacture_year','model_id','passengers_id','car_weight','client_address','total','net_premium','supervisory_fees','relative_stamp', 'breadth_stamp','issuance_fees','client_name','transport_passengers');
+
+
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			where('licence_type_id', '=', $licencetype)->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		if($licencetype==30)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date', 'chassis_no','plate_no', 'motor_no', 'manufacture_year','model_id','client_address','total','net_premium','supervisory_fees','relative_stamp' , 'breadth_stamp','issuance_fees','client_name','transport_passengers');
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [14,15, 16, 17,18,19,20,21,37,34,35,36,26,27,28,29,30])->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}		
+
+		if($licencetype==1)
+
+		{
+
+			$selected_columns = array('endorsement_no','id','company_id','licence_type_id','client_telephone','is_company','endorsement_date', 'policy_start_date', 'policy_end_date', 'chassis_no','plate_no','licence_img_path', 'motor_no', 'manufacture_year','model_id','car_cc','client_address','total','net_premium', 'supervisory_fees','relative_stamp','breadth_stamp', 'issuance_fees','client_name','transport_passengers');
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			whereIn('licence_type_id', [1, 12, 31,32,33])->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+		else
+
+		{
+
+			return Endorsement::where('company_id', '=', $company)->
+
+			where('licence_type_id', '=', $licencetype)->
+
+			whereIn('office_id', $office_id )->
+
+			where('endorsement_no','=',-1)->
+
+			whereDate('endorsement_date','<=',date($policy_end_date))->
+
+			whereDate('endorsement_date','>=',date($policy_start_date))->select($selected_columns)->get();
+
+		}
+
+	}
+
+
+
+	public function InDocumentRangeEndorsement($document_start_no, $document_end_no, $company_id)
+
+	{
+
+		return Endorsement::where('endorsement_no', '>=', $document_start_no)->where('endorsement_no', '<=', $document_end_no)->where('company_id','=',$company_id)->get();
+
+	}
+
+}
